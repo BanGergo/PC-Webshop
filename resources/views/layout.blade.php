@@ -13,10 +13,10 @@
     <header>
         <div class="navbar">
             <div class="dropdown">
-              <button class="dropbtn">Menü
+            <button class="dropbtn">Menü
                 <i class="fa fa-caret-down"></i>
-              </button>
-              <div class="dropdown-content">
+            </button>
+            <div class="dropdown-content">
                 <a href="#">Link 1</a>
                 <a href="#">Link 2</a>
                 <a href="#">Link 3</a>
@@ -27,7 +27,7 @@
                 <a href="#">Link 8</a>
                 <a href="#">Link 9</a>
                 <a href="#">Link 10</a>
-              </div>
+            </div>
             </div>
             <div id="logo">
                 <a href="#">LOGO</a>
@@ -40,7 +40,7 @@
                 <label>Belépés<a class="lepes" href="#">👤</a></label>
                 <label>Kosár<a class="lepes" href="#">🛒</a></label>
             </div>
-          </div>
+        </div>
     </header>
 <!-- Cut -->
 @yield('content')
