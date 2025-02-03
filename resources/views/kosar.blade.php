@@ -228,7 +228,7 @@
 
                         <div class="row my-4">
                             <div class="col-sm-6">
-                                <a href="./sablon.html" class="btn btn-link text-muted">
+                                <a href="/" class="btn btn-link text-muted">
                                     <i class="mdi mdi-arrow-left me-1"></i> Vásárlás folytatása </a>
                             </div> <!-- end col -->
                             <div class="col-sm-6">
