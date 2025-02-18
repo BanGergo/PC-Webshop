@@ -1,5 +1,10 @@
 @extends('layout')
 @section('content')
+        @error("sv")
+            <div class="alert alert-info" role="alert">
+                {{$message}}
+            </div>
+        @enderror
         <div class="container py-3 mx-auto">
             <div id="carouselExampleIndicators" class="carousel slide w-75 mx-auto" data-bs-ride="carousel" data-bs-touch="true">
                 <div class="carousel-indicators">
