@@ -1,7 +1,7 @@
 @extends('layout')
 @section('content')
         @error("sv")
-            <div class="alert alert-info" role="alert">
+            <div class="alert alert-info text-center" role="alert">
                 {{$message}}
             </div>
         @enderror

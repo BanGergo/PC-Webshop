@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +17,7 @@ class UserController extends Controller
 
     public function regData(Request $req){
         $req->validate([
-            'nev' => 'required|unique:user,nev',
+            'nev' => 'required',
             'email' => 'required|email|unique:user,email',
             'password' => ['required', 'confirmed', Password::min(8)->numbers()->letters()->mixedCase()],
             'password_confirmation' => 'required'
@@ -24,7 +25,6 @@ class UserController extends Controller
         ],[
             'nev.required' => "A nevet kötelező megadni!",
             'email.required' => "Az emailt kötelező megadni!",
-            'name.unique' => 'Ez a név már foglalt!',
             'email.unique' => 'Ez az e-mail cím már foglalt!',
             'password.required' => "A jelszót kötelező megadni!",
             'password.min' => 'A jelszó legalább 8 karakter legyen!',
@@ -84,7 +84,7 @@ class UserController extends Controller
         ]);
 
         if(Hash::check($req->opassword, Auth::user()->password)){
-            $data           = User::find(Auth::user()->user_id);
+            $data           = User::find(Auth::user()->felhasznaloid);
             $data->password = Hash::make($req->npassword);
             $data->Save();
             return redirect('/')->withErrors(['sv' => 'Sikeres jelszó módosítás!']);

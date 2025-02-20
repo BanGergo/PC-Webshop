@@ -38,7 +38,8 @@
                             <a class="btn btn-primary" href="/logout"><i class="fa-solid fa-right-to-bracket"></i></a>
                             <a href="/kosar" role="button" class="btn btn-primary mx-2" id="mobilKosar"><i class="fa-solid fa-cart-shopping"></i></a>
                         @else
-                            <a class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal" id="mobilProfil"><i class="fa-solid fa-user"></i></a>
+                            <a href="/login" class="btn btn-primary" id="mobilProfil"><i class="fa-solid fa-user"></i></a>
+                            {{-- <a class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal" id="mobilProfil"><i class="fa-solid fa-user"></i></a> --}}
                             <a href="/kosar" role="button" class="btn btn-primary mx-2" id="mobilKosar"><i class="fa-solid fa-cart-shopping"></i></a>
                         @endauth
                     </div>
@@ -168,7 +169,8 @@
                             <a class="btn btn-primary" href="/logout"><i class="fa-solid fa-right-to-bracket"></i></a>
                             <a href="/kosar" role="button" class="btn btn-primary mx-2" id="mobilKosar"><i class="fa-solid fa-cart-shopping"></i></a>
                         @else
-                            <a class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal" id="mobilProfil"><i class="fa-solid fa-user"></i></a>
+                            <a href="/login" class="btn btn-primary" id="mobilProfil"><i class="fa-solid fa-user"></i></a>
+                        {{-- <a class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal" id="mobilProfil"><i class="fa-solid fa-user"></i></a> --}}
                             <a href="/kosar" role="button" class="btn btn-primary mx-2" id="mobilKosar"><i class="fa-solid fa-cart-shopping"></i></a>
                         @endauth
                     </div>

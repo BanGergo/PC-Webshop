@@ -8,11 +8,11 @@ Route::view('/',"welcome");
 Route::get('/kosar', [WebshopController::class, 'Kosar']);
 Route::get("/search", [WebshopController::class, 'Search']);
 
-// Route::view('/reg','reg');
-Route::post('/', [UserController::class, 'regData']);
+Route::view('/reg','reg');
+Route::post('/reg', [UserController::class, 'regData']);
 
-// Route::view('/login','login');
-Route::post('/', [UserController::class, 'loginData']);
+Route::view('/login','login');
+Route::post('/login', [UserController::class, 'loginData']);
 
 Route::view('/profil', 'profil');
 
