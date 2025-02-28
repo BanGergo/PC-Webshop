@@ -26,7 +26,7 @@
                                 Menü
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Kategória_1</a></li>
+                                <li><a class="dropdown-item" href="/mind">Mind</a></li>
                                 <li><a class="dropdown-item" href="#">Kategória_2</a></li>
                                 <li><a class="dropdown-item" href="#">Kategória_3</a></li>
                             </ul>
@@ -34,9 +34,14 @@
                     </ul>
                     <div class="mobilGombok py-2">
                         @auth
-                            <a href="/profil" class="btn btn-primary"><i class="fa-solid fa-user"></i></a>
-                            <a class="btn btn-primary" href="/logout"><i class="fa-solid fa-right-to-bracket"></i></a>
-                            <a href="/kosar" role="button" class="btn btn-primary mx-2" id="mobilKosar"><i class="fa-solid fa-cart-shopping"></i></a>
+                            @if (Auth::user()->email == "admin@gmail.com")
+                                <a href="/profil" class="btn btn-primary"><i class="fa-solid fa-user"></i></a>
+                                <a class="btn btn-primary" href="/logout"><i class="fa-solid fa-right-to-bracket"></i></a>
+                            @else
+                                <a href="/profil" class="btn btn-primary"><i class="fa-solid fa-user"></i></a>
+                                <a class="btn btn-primary" href="/logout"><i class="fa-solid fa-right-to-bracket"></i></a>
+                                <a href="/kosar" role="button" class="btn btn-primary mx-2" id="mobilKosar"><i class="fa-solid fa-cart-shopping"></i></a>
+                            @endif
                         @else
                             <a href="/login" class="btn btn-primary" id="mobilProfil"><i class="fa-solid fa-user"></i></a>
                             {{-- <a class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal" id="mobilProfil"><i class="fa-solid fa-user"></i></a> --}}
@@ -165,9 +170,14 @@
                     </div>
                     <div class="desktopGombok">
                         @auth
-                            <a href="/profil" class="btn btn-primary"><i class="fa-solid fa-user"></i></a>
-                            <a class="btn btn-primary" href="/logout"><i class="fa-solid fa-right-to-bracket"></i></a>
-                            <a href="/kosar" role="button" class="btn btn-primary mx-2" id="mobilKosar"><i class="fa-solid fa-cart-shopping"></i></a>
+                            @if (Auth::user()->email == "admin@gmail.com")
+                                <a href="/profil" class="btn btn-primary"><i class="fa-solid fa-user"></i></a>
+                                <a class="btn btn-primary" href="/logout"><i class="fa-solid fa-right-to-bracket"></i></a>
+                            @else
+                                <a href="/profil" class="btn btn-primary"><i class="fa-solid fa-user"></i></a>
+                                <a class="btn btn-primary" href="/logout"><i class="fa-solid fa-right-to-bracket"></i></a>
+                                <a href="/kosar" role="button" class="btn btn-primary mx-2" id="mobilKosar"><i class="fa-solid fa-cart-shopping"></i></a>
+                            @endif
                         @else
                             <a href="/login" class="btn btn-primary" id="mobilProfil"><i class="fa-solid fa-user"></i></a>
                         {{-- <a class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal" id="mobilProfil"><i class="fa-solid fa-user"></i></a> --}}
