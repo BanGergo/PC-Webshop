@@ -3,7 +3,8 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Sablon - Írd át</title>
+        <title>CyberByte Corner</title>
+        <link rel="icon" type="image/x-icon" href="{{asset('/assets/img/favicon.png')}}">
         <link rel="stylesheet" href="{{asset('/assets/css/bootstrap.css')}}">
         <link rel="stylesheet" href="{{asset('/assets/fontawesome/css/fontawesome.css')}}">
         <link rel="stylesheet" href="{{asset('/assets/fontawesome/css/solid.css')}}">
@@ -25,15 +26,27 @@
                                 Menü
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Kategória_1</a></li>
+                                <li><a class="dropdown-item" href="/mind">Mind</a></li>
                                 <li><a class="dropdown-item" href="#">Kategória_2</a></li>
                                 <li><a class="dropdown-item" href="#">Kategória_3</a></li>
                             </ul>
                         </li>
                     </ul>
                     <div class="mobilGombok py-2">
-                        <button class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal" id="mobilProfil"><i class="fa-solid fa-user"></i></button>
-                        <a href="/kosar" role="button" class="btn btn-primary mx-2" id="mobilKosar"><i class="fa-solid fa-cart-shopping"></i></a>
+                        @auth
+                            @if (Auth::user()->email == "admin@gmail.com")
+                                <a href="/profil" class="btn btn-primary"><i class="fa-solid fa-user"></i></a>
+                                <a class="btn btn-primary" href="/logout"><i class="fa-solid fa-right-to-bracket"></i></a>
+                            @else
+                                <a href="/profil" class="btn btn-primary"><i class="fa-solid fa-user"></i></a>
+                                <a class="btn btn-primary" href="/logout"><i class="fa-solid fa-right-to-bracket"></i></a>
+                                <a href="/kosar" role="button" class="btn btn-primary mx-2" id="mobilKosar"><i class="fa-solid fa-cart-shopping"></i></a>
+                            @endif
+                        @else
+                            <a href="/login" class="btn btn-primary" id="mobilProfil"><i class="fa-solid fa-user"></i></a>
+                            {{-- <a class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal" id="mobilProfil"><i class="fa-solid fa-user"></i></a> --}}
+                            <a href="/kosar" role="button" class="btn btn-primary mx-2" id="mobilKosar"><i class="fa-solid fa-cart-shopping"></i></a>
+                        @endauth
                     </div>
                     <form class="d-flex px-2" role="search">
                         <input class="form-control me-2" id="searchBar" type="search" placeholder="Search" aria-label="Search">
@@ -51,22 +64,29 @@
                                         <div class="py-2">
                                             <label class="form-label" for="login_email"><strong>E-mail:*</strong></label>
                                             <input type="email" name="login_email" id="login_email" class="form-control" required>
+                                            @error('login_email')
+                                                <span class="text-danger">{{$message}}</span><br>
+                                            @enderror
                                         </div>
                                         <div class="py-2">
                                             <label class="form-label" for="login_password"><strong>Jelszó:*</strong></label>
                                             <input type="password" name="login_password" id="login_password" class="form-control" required>
+                                            @error('login_password')
+                                                <span class="text-danger">{{$message}}</span><br>
+                                            @enderror
+                                        </div>
+                                        <div class="py-2 d-flex justify-content-center">
+                                            <button class="btn btn-primary" type="submit">Bejelentkezés</button>
                                         </div>
                                     </form>
-                                    <div class="py-2">
-                                        <button class="btn btn-primary" type="submit">Bejelentkezés</button>
-                                    </div>
+
                                 </div>
                                 <div class="modal-footer mx-auto">
                                     <div class="row">
                                         <button class="btn" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal">Regisztráció</button>
                                     </div><br>
                                     <div class="row">
-                                        <button class="btn" data-bs-target="#newPassModalToggle" data-bs-toggle="modal">Jelszó visszaállítás</button>
+                                        <button href="/mod" class="btn" data-bs-target="#newPassModalToggle" data-bs-toggle="modal">Jelszó visszaállítás</button>
                                     </div>
                                 </div>
                             </div>
@@ -84,21 +104,36 @@
                                         <div class="py-2">
                                             <label class="form-label" for="name"><strong>Név:*</strong></label>
                                             <input type="text" name="name" id="name" class="form-control" required>
+                                            @error('name')
+                                                <span class="text-danger">{{$message}}</span><br>
+                                            @enderror
                                         </div>
                                         <div class="py-2">
                                             <label class="form-label" for="email"><strong>E-mail cím:*</strong></label>
                                             <input type="email" name="email" id="email" class="form-control" required>
+                                            @error('email')
+                                                <span class="text-danger">{{$message}}</span><br>
+                                            @enderror
                                         </div>
                                         <div class="py-2">
                                             <label class="form-label" for="password"><strong>Jelszó:*</strong></label>
                                             <input type="password" name="password" id="password" class="form-control" required>
+                                            @error('password')
+                                                <span class="text-danger">{{$message}}</span><br>
+                                            @enderror
                                         </div>
                                         <div class="py-2">
-                                            <label class="form-label" for="password_confirm"><strong>Jelszó mégegyszer:*</strong></label>
-                                            <input type="password" name="password_confirm" id="password_confirm" class="form-control" required>
+                                            <label class="form-label" for="password_confirmation"><strong>Jelszó mégegyszer:*</strong></label>
+                                            <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" required>
+                                            @error('password_confirmation')
+                                                <span class="text-danger">{{$message}}</span><br>
+                                            @enderror
+                                        </div>
+                                        <div class="py-2 d-flex justify-content-center">
+                                            <button class="btn btn-primary" type="submit">Regisztráció</button>
                                         </div>
                                     </form>
-                                    <button class="btn btn-primary" type="submit">Regisztráció</button>
+
                                 </div>
                                 <div class="modal-footer mx-auto">
                                     <button class="btn" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">Bejelentkezés</button>
@@ -120,7 +155,7 @@
                                             <input type="email" name="newpass_email" id="newpass_email" class="form-control">
                                         </div>
                                     </form>
-                                    <div class="py-2">
+                                    <div class="py-2 d-flex justify-content-center">
                                         <button class="btn btn-primary" type="submit">Új jelszó kérése</button>
                                     </div>
                                 </div>
@@ -132,8 +167,20 @@
                         </div>
                     </div>
                     <div class="desktopGombok">
-                        <button class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal" id="desktopProfil"><i class="fa-solid fa-user"></i></button>
-                        <a href="/kosar" role="button" class="btn btn-primary mx-2"><i class="fa-solid fa-cart-shopping" id="desktopKosar"></i></a>
+                        @auth
+                            @if (Auth::user()->email == "admin@gmail.com")
+                                <a href="/profil" class="btn btn-primary"><i class="fa-solid fa-user"></i></a>
+                                <a class="btn btn-primary" href="/logout"><i class="fa-solid fa-right-to-bracket"></i></a>
+                            @else
+                                <a href="/profil" class="btn btn-primary"><i class="fa-solid fa-user"></i></a>
+                                <a class="btn btn-primary" href="/logout"><i class="fa-solid fa-right-to-bracket"></i></a>
+                                <a href="/kosar" role="button" class="btn btn-primary mx-2" id="mobilKosar"><i class="fa-solid fa-cart-shopping"></i></a>
+                            @endif
+                        @else
+                            <a href="/login" class="btn btn-primary" id="mobilProfil"><i class="fa-solid fa-user"></i></a>
+                        {{-- <a class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal" id="mobilProfil"><i class="fa-solid fa-user"></i></a> --}}
+                            <a href="/kosar" role="button" class="btn btn-primary mx-2" id="mobilKosar"><i class="fa-solid fa-cart-shopping"></i></a>
+                        @endauth
                     </div>
                 </div>
             </div>

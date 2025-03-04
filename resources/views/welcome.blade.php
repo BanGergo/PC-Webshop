@@ -1,5 +1,10 @@
 @extends('layout')
 @section('content')
+        @error("sv")
+            <div class="alert alert-info text-center" role="alert">
+                {{$message}}
+            </div>
+        @enderror
         <div class="container py-3 mx-auto">
             <div id="carouselExampleIndicators" class="carousel slide w-75 mx-auto" data-bs-ride="carousel" data-bs-touch="true">
                 <div class="carousel-indicators">
@@ -9,13 +14,13 @@
                 </div>
                 <div class="carousel-inner">
                     <div class="carousel-item active">
-                        <img src="./assets/img/img1.jpg" class="d-block w-100" alt="...">
+                        <img src="./assets/img/welcomebanner.PNG" class="d-block w-100" alt="...">
                     </div>
                     <div class="carousel-item">
-                        <img src="./assets/img/img2.jpg" class="d-block w-100" alt="...">
+                        <img src="./assets/img/loyaltybanner.PNG" class="d-block w-100" alt="...">
                     </div>
                     <div class="carousel-item">
-                        <img src="./assets/img/img3.jpg" class="d-block w-100" alt="...">
+                        <img src="./assets/img/comingsoonbanner.PNG" class="d-block w-100" alt="...">
                     </div>
                 </div>
                 <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
