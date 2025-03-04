@@ -47,7 +47,7 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <form action="submit">
+                                    <form action="/login" method="POST">
                                         <div class="py-2">
                                             <label class="form-label" for="login_email"><strong>E-mail:*</strong></label>
                                             <input type="email" name="login_email" id="login_email" class="form-control" required>
@@ -80,7 +80,7 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <form action="submit">
+                                    <form action="/reg" method="POST">
                                         <div class="py-2">
                                             <label class="form-label" for="name"><strong>Név:*</strong></label>
                                             <input type="text" name="name" id="name" class="form-control" required>
@@ -114,7 +114,7 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <form action="submit">
+                                    <form action="/newpass" method="POST">
                                         <div class="py-2">
                                             <label class="form-label" for="newpass_email"><strong>E-mail:*</strong></label>
                                             <input type="email" name="newpass_email" id="newpass_email" class="form-control">
