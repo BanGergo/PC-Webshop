@@ -24,5 +24,5 @@ Route::post("/profil", [WebshopController::class, 'termekadddata']);
 
 Route::get("/mind", [WebshopController::class, "mind"]);
 
-Route::get('/tmod/{tcikk}', [WebshopController::class, 'tmod']);
-Route::post('/tmod/{tcikk}', [WebshopController::class, 'tmoddata']);
+Route::get('/tmod/{cikkszam}', [WebshopController::class, 'tmod']);
+Route::post('/tmod/{cikkszam}', [WebshopController::class, 'tmoddata']);

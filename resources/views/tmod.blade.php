@@ -60,6 +60,21 @@
         @error('tdesc')
             <span class="text-danger">{{$message}}</span>
         @enderror
+        <label class="form-label" for="tgar">Termék garanciája:*</label>
+        <input class="form-control" type="number" name="tgar" id="tgar">
+        @error('tgar')
+            <span class="text-danger">{{$message}}</span>
+        @enderror
+        <label class="form-label" for="tkat">Termék kategoria száma:*</label>
+        <input class="form-control" type="number" name="tkat" id="tkat">
+        @error('tkat')
+            <span class="text-danger">{{$message}}</span>
+        @enderror
+        <label class="form-label" for="tgyarto">Termék gyartó száma:*</label>
+        <input class="form-control" type="number" name="tgyarto" id="tgyarto">
+        @error('tgyarto')
+            <span class="text-danger">{{$message}}</span>
+        @enderror
         <button class="btn btn-dark my-3" id="ok" onclick="tmodconf()" type="submit">Módosítás</button>
     </div>
 </form>

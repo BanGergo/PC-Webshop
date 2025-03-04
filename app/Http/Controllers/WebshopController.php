@@ -29,10 +29,13 @@ class WebshopController extends Controller
             'tnev' => 'required',
             'tar' => 'required',
             'tkedv' => 'required',
-            'tcikk' => 'required|unique:termek,tcikk',
+            'tcikk' => 'required|unique:termek,cikkszam',
             'tkep' => 'required',
             'tmenny' => 'required',
             'tdesc' => 'required',
+            'tgar' => 'required',
+            'tkat' => 'required',
+            'tgyarto' => 'required'
         ],[
             'tnev.required' => "kötelező megadni!",
             'tar.required' => "kötelező megadni!",
@@ -42,17 +45,23 @@ class WebshopController extends Controller
             'tkep.required' => "kötelező megadni!",
             'tmenny.required' => "kötelező megadni!",
             'tdesc.required' => "kötelező megadni!",
+            'tgar.required' => "Kötelező megadni!",
+            'tkat.required' => "Kötelező megadni!",
+            'tgyarto.required' => "Kötelező megadni!",
         ]);
 
 
         $data = new termek;
-        $data->tnev = $req->tnev;
-        $data->tar = $req->tar;
-        $data->tkedv = $req->tkedv;
-        $data->tcikk = $req->tcikk;
-        $data->tkep = $req->tkep;
-        $data->tmenny = $req->tmenny;
-        $data->tdesc = $req->tdesc;
+        $data->nev = $req->tnev;
+        $data->netto = $req->tar;
+        $data->kedv = $req->tkedv;
+        $data->cikkszam = $req->tcikk;
+        $data->img_id = $req->tkep;
+        $data->keszlet = $req->tmenny;
+        $data->leiras = $req->tdesc;
+        $data->garancia = $req->tgar;
+        $data->kat_id = $req->tkat;
+        $data->gyarto_id = $req->tgyarto;
         $data->Save();
 
         return redirect("/profil");
@@ -72,23 +81,26 @@ class WebshopController extends Controller
         ]);
     }
 
-    public function tmod($tcikk){
+    public function tmod($cikkszam){
         return view('tmod',[
             'adatok' => termek::select('*')
-                    ->where('tcikk', $tcikk)
+                    ->where('cikkszam', $cikkszam)
                     ->get()
         ]);
     }
 
-    public function tmoddata(Request $req, $tcikk){
+    public function tmoddata(Request $req, $cikkszam){
         $req->validate([
             'tnev' => 'required',
             'tar' => 'required',
             'tkedv' => 'required',
-            'tcikk' => 'required|unique:termek,tcikk',
+            'tcikk' => 'required|unique:termek,cikkszam',
             'tkep' => 'required',
             'tmenny' => 'required',
             'tdesc' => 'required',
+            'tgar' => 'required',
+            'tkat' => 'required',
+            'tgyarto' => 'required'
         ],[
             'tnev.required' => "kötelező megadni!",
             'tar.required' => "kötelező megadni!",
@@ -98,15 +110,23 @@ class WebshopController extends Controller
             'tkep.required' => "kötelező megadni!",
             'tmenny.required' => "kötelező megadni!",
             'tdesc.required' => "kötelező megadni!",
+            'tgar.required' => "Kötelező megadni!",
+            'tkat.required' => "Kötelező megadni!",
+            'tgyarto.required' => "Kötelező megadni!",
         ]);
 
         if (Auth::user()->email == "admin@gmail.com") {
-            $data = termek::find($tcikk);
-            $data->tnev = $req->tnev;
-            $data->tar = $req->tar;
-            $data->tkedv = $req->tkedv;
-            $data->tmenny = $req->tmenny;
-            $data->tdesc = $req->tdesc;
+            $data = termek::find($cikkszam);
+            $data->nev = $req->tnev;
+            $data->netto = $req->tar;
+            $data->kedv = $req->tkedv;
+            $data->cikkszam = $req->tcikk;
+            $data->img_id = $req->tkep;
+            $data->keszlet = $req->tmenny;
+            $data->leiras = $req->tdesc;
+            $data->garancia = $req->tgar;
+            $data->kat_id = $req->tkat;
+            $data->gyarto_id = $req->tgyarto;
             $data->Save();
             return redirect('/profil')->withErrors(['sv' => 'Sikeres termék módosítás']);
         }

@@ -8,5 +8,5 @@ class termek extends Model
 {
     protected $table = "termek";
     public $timestamps = false;
-    protected $primaryKey = "tcikk";
+    protected $primaryKey = "cikkszam";
 }

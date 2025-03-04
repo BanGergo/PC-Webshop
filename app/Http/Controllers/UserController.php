@@ -39,6 +39,11 @@ class UserController extends Controller
         $data->nev = $req->nev;
         $data->email = $req->email;
         $data->password = Hash::make($req->password);
+        $data->irszam = "null";
+        $data->varos = "null";
+        $data->uha = "null";
+        $data->megj = "null";
+        $data->status = 1;
         $data->Save();
 
         return view('welcome',['sv' => 'Sikeresen regisztráltál']);
@@ -84,7 +89,7 @@ class UserController extends Controller
         ]);
 
         if(Hash::check($req->opassword, Auth::user()->password)){
-            $data           = User::find(Auth::user()->felhasznaloid);
+            $data           = User::find(Auth::user()->users_id);
             $data->password = Hash::make($req->npassword);
             $data->Save();
             return redirect('/')->withErrors(['sv' => 'Sikeres jelszó módosítás!']);

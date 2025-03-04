@@ -22,7 +22,7 @@
                                 <label for="nevek" class="form-label my-3"><h2>Válasszon terméket!</h2></label>
                                 <select class="form-control" name="nevek" id="nevek">
                                     @foreach ($nevek as $nev)
-                                        <option class="form-control" value="{{$nev->tcikk}}"><a href="/cikkszam/{{$nev->tcikk}}">{{$nev->tnev}}</a></option>
+                                        <option class="form-control" value="{{$nev->cikkszam}}"><a href="/cikkszam/{{$nev->cikkszam}}">{{$nev->nev}}</a></option>
                                     @endforeach
                                 </select>
                                 <button class="btn btn-outline-dark my-3" id="valasztott" onclick="tmod()" type="button">Módosítás</button>
@@ -88,6 +88,21 @@
                                 <label class="form-label" for="tdesc">Termék leírása:*</label>
                                 <textarea class="form-control" rows="3" name="tdesc" id="tdesc"></textarea>
                                 @error('tdesc')
+                                    <span class="text-danger">{{$message}}</span>
+                                @enderror
+                                <label class="form-label" for="tgar">Termék garancia:*</label>
+                                <input class="form-control" type="number" name="tgar" id="tgar">
+                                @error('tgar')
+                                    <span class="text-danger">{{$message}}</span>
+                                @enderror
+                                <label class="form-label" for="tkat">Termék kategoriája:*</label>
+                                <input class="form-control" type="number" name="tkat" id="tkat">
+                                @error('tkat')
+                                    <span class="text-danger">{{$message}}</span>
+                                @enderror
+                                <label class="form-label" for="tgyarto">Termék gyártója:*</label>
+                                <input class="form-control" type="number" name="tgyarto" id="tgyarto">
+                                @error('tgyarto')
                                     <span class="text-danger">{{$message}}</span>
                                 @enderror
                                 <button class="btn btn-dark my-3" id="ok" type="submit">Hozzáadás</button>

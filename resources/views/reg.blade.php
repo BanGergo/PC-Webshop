@@ -26,12 +26,12 @@
             <a id="cancel" href="/">❌</a>
             <h1>Regisztráció</h1>
             <label class="form-label" for="nev">Név:*</label><br>
-            <input class="form-control" type="text" name="nev" id="nev"><br>
+            <input class="form-control" type="text" name="nev" id="nev" value="{{old('nev')}}"><br>
             @error('nev')
                 <span class="text-danger">{{ $message }}</span><br>
             @enderror
             <label class="form-label text-start" for="email">E-mail:*</label><br>
-            <input class="form-control" type="email" name="email" id="email"><br>
+            <input class="form-control" type="email" name="email" id="email"  value="{{old('email')}}"><br>
             @error('email')
                 <span class="text-danger">{{ $message }}</span><br>
             @enderror
@@ -49,4 +49,4 @@
             <a href="/login">Bejelentkezés</a>
         </div>
     </form>
-@endsection()
+@endsection
