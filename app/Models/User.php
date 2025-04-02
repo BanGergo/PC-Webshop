@@ -47,5 +47,5 @@ class User extends Authenticatable
     }
 
     protected $table = "user";
-    protected $primaryKey = "users_id";
+    protected $primaryKey = "user_id";
 }

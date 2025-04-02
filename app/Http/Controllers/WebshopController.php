@@ -12,15 +12,12 @@ use Illuminate\Support\Facades\Auth;
 
 class WebshopController extends Controller
 {
-    function Kosar() {
-        return view('kosar');
-    }
 
     public function Search(){
         $req = Request()->query('search');
         return view('search', [
             'result'    => termek::where('nev', 'LIKE', '%'.$req.'%')
-                                   ->get()
+            ->get()
         ]);
     }
 
@@ -71,48 +68,48 @@ class WebshopController extends Controller
         return view('mind',[
             'result' => termek::select('*')
                     ->get()
-        ]);
-    }
+                ]);
+            }
 
-    public function profil(){
-        return view('profil',[
-            'nevek' => termek::select('*')
+            public function profil(){
+                return view('profil',[
+                    'nevek' => termek::select('*')
                     ->get()
-        ]);
-    }
+                ]);
+            }
 
-    public function tmod($cikkszam){
-        return view('tmod',[
-            'adatok' => termek::select('*')
+            public function tmod($cikkszam){
+                return view('tmod',[
+                    'adatok' => termek::select('*')
                     ->where('cikkszam', $cikkszam)
                     ->get()
-        ]);
-    }
+                ]);
+            }
 
-    public function tmoddata(Request $req, $cikkszam){
-        $req->validate([
-            'tnev' => 'required',
-            'tar' => 'required',
-            'tkedv' => 'required',
-            'tcikk' => 'required|unique:termek,cikkszam',
-            'tkep' => 'required',
-            'tmenny' => 'required',
-            'tdesc' => 'required',
-            'tgar' => 'required',
-            'tkat' => 'required',
-            'tgyarto' => 'required'
-        ],[
-            'tnev.required' => "kötelező megadni!",
-            'tar.required' => "kötelező megadni!",
-            'tkedv.required' => "kötelező megadni!",
-            'tcikk.required' => "kötelező megadni!",
-            'tcikk.unique' => "Ez a cikkszám már foglalt",
-            'tkep.required' => "kötelező megadni!",
-            'tmenny.required' => "kötelező megadni!",
-            'tdesc.required' => "kötelező megadni!",
-            'tgar.required' => "Kötelező megadni!",
-            'tkat.required' => "Kötelező megadni!",
-            'tgyarto.required' => "Kötelező megadni!",
+            public function tmoddata(Request $req, $cikkszam){
+                $req->validate([
+                    'tnev' => 'required',
+                    'tar' => 'required',
+                    'tkedv' => 'required',
+                    'tcikk' => 'required|unique:termek,cikkszam',
+                    'tkep' => 'required',
+                    'tmenny' => 'required',
+                    'tdesc' => 'required',
+                    'tgar' => 'required',
+                    'tkat' => 'required',
+                    'tgyarto' => 'required'
+                ],[
+                    'tnev.required' => "kötelező megadni!",
+                    'tar.required' => "kötelező megadni!",
+                    'tkedv.required' => "kötelező megadni!",
+                    'tcikk.required' => "kötelező megadni!",
+                    'tcikk.unique' => "Ez a cikkszám már foglalt",
+                    'tkep.required' => "kötelező megadni!",
+                    'tmenny.required' => "kötelező megadni!",
+                    'tdesc.required' => "kötelező megadni!",
+                    'tgar.required' => "Kötelező megadni!",
+                    'tkat.required' => "Kötelező megadni!",
+                    'tgyarto.required' => "Kötelező megadni!",
         ]);
 
         if (Auth::user()->email == "admin@gmail.com") {
@@ -133,5 +130,85 @@ class WebshopController extends Controller
         else {
             return redirect('/')->withErrors(['sv' => 'Termék módosítást csak az admin végezhet']);
         }
+    }
+    public function Cart(){
+        $total = 0;
+        if(!session('cart') == null){
+            foreach(session('cart') as $row){
+                $total = $total + $row['ar']*$row['db'];
+            }
+        }
+        return view('cart', [
+            'total'     => $total
+        ]);
+    }
+
+    public function CartData(Request $req){
+        $cart = session()->get('cart');
+
+        if($req->has('minus')){
+            if($cart[$req->minus]['db']>1){
+                $cart[$req->minus]['db'] = $cart[$req->minus]['db']-1;
+            } else {
+                unset($cart[$req->minus]);
+            }
+        }
+
+        if($req->has('plus')){
+            $cart[$req->plus]['db'] = $cart[$req->plus]['db']+1;
+        }
+
+        if($req->has('delete')){
+            unset($cart[$req->delete]);
+        }
+
+        session()->put('cart',$cart);
+        return redirect('/cart');
+    }
+
+    public function Order(){
+        $total = 0;
+        if(!session('cart') == null){
+            $order = session()->get('cart');
+            foreach($order as $row){
+                $total = $total + $row['ar']*$row['db'];
+            }
+        }
+        session()->flush('cart');
+        ## $order adatbázisba írása
+        if($total == 0){
+            return redirect('/');
+        } else {
+            return view('order', [
+                'order' => $order,
+                'total' => $total
+            ]);
+        }
+    }
+    public function Add(Request $req){
+        ##dd($req);
+        $termek  = termekek::find($req->termek_id);
+        $cart = session()->get('cart');
+        if(isset($cart[$termek->termekek_id])){
+            $cart[$termek->termekek_id]['db'] = $cart[$termek->termekek_id]['db']+1;
+        } else {
+            $cart[$termek->termekek_id] = [
+                'termek_id' => $termek->termekek_id,
+                'nev'       => $termek->nev,
+                'ar'        => $termek->ar,
+                'db'        => 1
+            ];
+        }
+
+        session()->put('cart',$cart);
+        ##dd($cart);
+        return view('add', [
+            'termekek_id'   => $req->termek_id
+        ]);
+    }
+
+    public function Welcome()
+    {
+        return view('welcome');
     }
 }

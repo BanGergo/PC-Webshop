@@ -39,14 +39,10 @@ class UserController extends Controller
         $data->nev = $req->nev;
         $data->email = $req->email;
         $data->password = Hash::make($req->password);
-        $data->irszam = "null";
-        $data->varos = "null";
-        $data->uha = "null";
-        $data->megj = "null";
         $data->status = 1;
         $data->Save();
 
-        return view('welcome',['sv' => 'Sikeresen regisztráltál']);
+        return redirect('/')->withErrors(['sv' => 'Sikeresen regisztráltál']);
     }
 
     public function loginData(Request $req){
@@ -57,12 +53,11 @@ class UserController extends Controller
             'login_email.required' => "Az emailt kötelező megadni!",
             'login_password.required' => "A jelszót kötelező megadni!"
         ]);
-
         if(Auth::attempt(['email' => $req->login_email, 'password' => $req->login_password])){
             return redirect('/')->withErrors(['sv' => 'Sikeresen belépett!']);
         }else {
             return redirect('/')->withErrors(['sv' => 'Nem sikerült belépni!']);
-         }
+        }
     }
 
     public function mod(){

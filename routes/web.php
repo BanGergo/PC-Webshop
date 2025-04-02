@@ -4,8 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WebshopController;
 use App\Http\Controllers\UserController;
 
-Route::view('/',"welcome");
-Route::get('/kosar', [WebshopController::class, 'Kosar']);
+Route::get('/', [WebshopController::class, 'Welcome']);
 Route::get("/search", [WebshopController::class, 'Search']);
 
 Route::view('/reg','reg');
@@ -26,3 +25,9 @@ Route::get("/mind", [WebshopController::class, "mind"]);
 
 Route::get('/tmod/{cikkszam}', [WebshopController::class, 'tmod']);
 Route::post('/tmod/{cikkszam}', [WebshopController::class, 'tmoddata']);
+
+Route::post('/add', [WebshopController::class, 'Add']);
+Route::get('/cart', [WebshopController::class, 'Cart']);
+Route::post('/cart', [WebshopController::class, 'CartData']);
+Route::get('/order', [WebshopController::class, 'Order']);
+

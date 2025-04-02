@@ -5,3 +5,4 @@ function tmod(){
 function tmodconf(){
     document.getElementById('tmodositas').action = window.location.href;
 }
+

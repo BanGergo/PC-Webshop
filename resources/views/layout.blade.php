@@ -11,9 +11,10 @@
         <link rel="stylesheet" href="{{asset('/assets/css/style.css')}}">
         <script src="{{asset('/assets/js/bootstrap.bundle.js')}}"></script>
         <script src="{{asset('/assets/js/script.js')}}"></script>
+
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <nav class="navbar navbar-expand-lg bg-body-tertiary bg-primary">
             <div class="container-fluid">
                 <a href="/" class="navbar-brand"><i class="fa-solid fa-house"></i></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,7 +45,7 @@
                             @endif
                         @else
                             <a href="/login" class="btn btn-primary" id="mobilProfil"><i class="fa-solid fa-user"></i></a>
-                            {{-- <a class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal" id="mobilProfil"><i class="fa-solid fa-user"></i></a> --}}
+                            {{-- <a class="btn btn-primary" data-bs-target="#loginModal" data-bs-toggle="modal" id="mobilProfil"><i class="fa-solid fa-user"></i></a> --}}
                             <a href="/kosar" role="button" class="btn btn-primary mx-2" id="mobilKosar"><i class="fa-solid fa-cart-shopping"></i></a>
                         @endauth
                     </div>
@@ -52,25 +53,29 @@
                         <input class="form-control me-2" id="searchBar" type="search" placeholder="Search" aria-label="Search">
                         <button class="btn" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
                     </form>
-                    <div class="modal fade justify-content-end" id="exampleModalToggle" aria-labelledby="exampleModalToggleLabel" tabindex="-1" style="display: none;" aria-hidden="true">
+                    <div class="modal fade justify-content-end" id="loginModal" aria-labelledby="loginModalLabel" tabindex="-1" style="display: none;" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="exampleModalToggleLabel"><strong>Bejelentkezés</strong></h1>
+                                    <h1 class="modal-title fs-5" id="loginModalLabel"><strong>Bejelentkezés</strong></h1>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
                                     <form action="/login" method="POST">
+                                        @csrf
                                         <div class="py-2">
                                             <label class="form-label" for="login_email"><strong>E-mail:*</strong></label>
-                                            <input type="email" name="login_email" id="login_email" class="form-control" required>
+                                            <input type="email" name="login_email" id="login_email" class="form-control" >
                                             @error('login_email')
                                                 <span class="text-danger">{{$message}}</span><br>
+                                                <script>
+                                                    $("#loginModal").modal(show: true);
+                                                </script>
                                             @enderror
                                         </div>
                                         <div class="py-2">
                                             <label class="form-label" for="login_password"><strong>Jelszó:*</strong></label>
-                                            <input type="password" name="login_password" id="login_password" class="form-control" required>
+                                            <input type="password" name="login_password" id="login_password" class="form-control" >
                                             @error('login_password')
                                                 <span class="text-danger">{{$message}}</span><br>
                                             @enderror
@@ -83,7 +88,7 @@
                                 </div>
                                 <div class="modal-footer mx-auto">
                                     <div class="row">
-                                        <button class="btn" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal">Regisztráció</button>
+                                        <button class="btn" data-bs-target="#regModal" data-bs-toggle="modal">Regisztráció</button>
                                     </div><br>
                                     <div class="row">
                                         <button href="/mod" class="btn" data-bs-target="#newPassModalToggle" data-bs-toggle="modal">Jelszó visszaállítás</button>
@@ -92,39 +97,40 @@
                             </div>
                         </div>
                     </div>
-                    <div class="modal fade" id="exampleModalToggle2" aria-labelledby="exampleModalToggleLabel2" tabindex="-1" style="display: none;" aria-hidden="true">
+                    <div class="modal fade" id="regModal" aria-labelledby="loginModalLabel2" tabindex="-1" style="display: none;" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="exampleModalToggleLabel2">Regisztráció</h1>
+                                    <h1 class="modal-title fs-5" id="loginModalLabel2">Regisztráció</h1>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
                                     <form action="/reg" method="POST">
+                                        @csrf
                                         <div class="py-2">
-                                            <label class="form-label" for="name"><strong>Név:*</strong></label>
-                                            <input type="text" name="name" id="name" class="form-control" required>
-                                            @error('name')
+                                            <label class="form-label" for="nev"><strong>Név:*</strong></label>
+                                            <input type="text" name="nev" id="nev" class="form-control" value="{{old('nev')}}">
+                                            @error('nev')
                                                 <span class="text-danger">{{$message}}</span><br>
                                             @enderror
                                         </div>
                                         <div class="py-2">
                                             <label class="form-label" for="email"><strong>E-mail cím:*</strong></label>
-                                            <input type="email" name="email" id="email" class="form-control" required>
+                                            <input type="email" name="email" id="email" class="form-control" value="{{old('email')}}">
                                             @error('email')
                                                 <span class="text-danger">{{$message}}</span><br>
                                             @enderror
                                         </div>
                                         <div class="py-2">
                                             <label class="form-label" for="password"><strong>Jelszó:*</strong></label>
-                                            <input type="password" name="password" id="password" class="form-control" required>
+                                            <input type="password" name="password" id="password" class="form-control">
                                             @error('password')
                                                 <span class="text-danger">{{$message}}</span><br>
                                             @enderror
                                         </div>
                                         <div class="py-2">
                                             <label class="form-label" for="password_confirmation"><strong>Jelszó mégegyszer:*</strong></label>
-                                            <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" required>
+                                            <input type="password" name="password_confirmation" id="password_confirmation" class="form-control">
                                             @error('password_confirmation')
                                                 <span class="text-danger">{{$message}}</span><br>
                                             @enderror
@@ -136,7 +142,7 @@
 
                                 </div>
                                 <div class="modal-footer mx-auto">
-                                    <button class="btn" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">Bejelentkezés</button>
+                                    <button class="btn" data-bs-target="#loginModal" data-bs-toggle="modal">Bejelentkezés</button>
                                 </div>
                             </div>
                         </div>
@@ -150,6 +156,7 @@
                                 </div>
                                 <div class="modal-body">
                                     <form action="/newpass" method="POST">
+                                        @csrf
                                         <div class="py-2">
                                             <label class="form-label" for="newpass_email"><strong>E-mail:*</strong></label>
                                             <input type="email" name="newpass_email" id="newpass_email" class="form-control">
@@ -160,8 +167,8 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer mx-auto">
-                                    <button class="btn" data-bs-target="#exampleModalToggle" data-bs-toggle="modal">Bejelentkezés</button>
-                                    <button class="btn" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal">Regisztráció</button>
+                                    <button class="btn" data-bs-target="#loginModal" data-bs-toggle="modal">Bejelentkezés</button>
+                                    <button class="btn" data-bs-target="#regModal" data-bs-toggle="modal">Regisztráció</button>
                                 </div>
                             </div>
                         </div>
@@ -175,11 +182,12 @@
                                 <a href="/profil" class="btn btn-primary"><i class="fa-solid fa-user"></i></a>
                                 <a class="btn btn-primary" href="/logout"><i class="fa-solid fa-right-to-bracket"></i></a>
                                 <a href="/kosar" role="button" class="btn btn-primary mx-2" id="mobilKosar"><i class="fa-solid fa-cart-shopping"></i></a>
+
                             @endif
                         @else
-                            <a href="/login" class="btn btn-primary" id="mobilProfil"><i class="fa-solid fa-user"></i></a>
-                        {{-- <a class="btn btn-primary" data-bs-target="#exampleModalToggle" data-bs-toggle="modal" id="mobilProfil"><i class="fa-solid fa-user"></i></a> --}}
+                            <a class="btn btn-primary" data-bs-target="#loginModal" data-bs-toggle="modal" id="mobilProfil"><i class="fa-solid fa-user"></i></a>
                             <a href="/kosar" role="button" class="btn btn-primary mx-2" id="mobilKosar"><i class="fa-solid fa-cart-shopping"></i></a>
+
                         @endauth
                     </div>
                 </div>
