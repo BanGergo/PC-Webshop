@@ -21,6 +21,14 @@ class WebshopController extends Controller
         ]);
     }
 
+    public function autocomplete(Request $req)
+    {
+        return termek::query()
+                    ->where("nev", "LIKE", "%{$req->search}%")
+                    ->take(5)
+                    ->get();
+    }
+
     public function termekadddata(Request $req){
         $req->validate([
             'tnev' => 'required',

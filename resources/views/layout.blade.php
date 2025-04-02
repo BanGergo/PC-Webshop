@@ -9,8 +9,11 @@
         <link rel="stylesheet" href="{{asset('/assets/fontawesome/css/fontawesome.css')}}">
         <link rel="stylesheet" href="{{asset('/assets/fontawesome/css/solid.css')}}">
         <link rel="stylesheet" href="{{asset('/assets/css/style.css')}}">
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
         <script src="{{asset('/assets/js/bootstrap.bundle.js')}}"></script>
         <script src="{{asset('/assets/js/script.js')}}"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 
     </head>
     <body>
@@ -49,8 +52,9 @@
                             <a href="/kosar" role="button" class="btn btn-primary mx-2" id="mobilKosar"><i class="fa-solid fa-cart-shopping"></i></a>
                         @endauth
                     </div>
-                    <form class="d-flex px-2" role="search">
-                        <input class="form-control me-2" id="searchBar" type="search" placeholder="Search" aria-label="Search">
+                    <form method="POST" action="/search" class="d-flex px-2" role="search">
+                        @csrf
+                        <input class="form-control me-2" id="search" type="text" placeholder="Search" aria-label="Search">
                         <button class="btn" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
                     </form>
                     <div class="modal fade justify-content-end" id="loginModal" aria-labelledby="loginModalLabel" tabindex="-1" style="display: none;" aria-hidden="true">
@@ -84,7 +88,6 @@
                                             <button class="btn btn-primary" type="submit">Bejelentkezés</button>
                                         </div>
                                     </form>
-
                                 </div>
                                 <div class="modal-footer mx-auto">
                                     <div class="row">
@@ -218,5 +221,22 @@
                 </div>
             </footer>
         </div>
+        <script type="text/javascript">
+
+            $("#search").keyup(function(){
+                var _token = $("input[name='_token']").val();
+                var search = $(this).val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('layout.autocomplete') }}",
+                    data: {_token: _token, search: nev}
+                    success: function(response){
+                        console.log(response);
+                    }
+                });
+            });
+
+        </script>
     </body>
 </html>

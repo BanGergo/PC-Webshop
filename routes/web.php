@@ -5,7 +5,7 @@ use App\Http\Controllers\WebshopController;
 use App\Http\Controllers\UserController;
 
 Route::get('/', [WebshopController::class, 'Welcome']);
-Route::get("/search", [WebshopController::class, 'Search']);
+Route::post('/', [WebshopController::class, "autocomplete"])->name("layout.autocomplete");
 
 Route::view('/reg','reg');
 Route::post('/reg', [UserController::class, 'regData']);
@@ -31,3 +31,6 @@ Route::get('/cart', [WebshopController::class, 'Cart']);
 Route::post('/cart', [WebshopController::class, 'CartData']);
 Route::get('/order', [WebshopController::class, 'Order']);
 
+
+// Route::get('search-autocomplete', [WebshopController::class, 'searchAutocomplete']);
+Route::post('/search', [WebshopController::class, 'searchAutoComplete']);
