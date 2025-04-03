@@ -14,7 +14,12 @@
         <script src="{{asset('/assets/js/script.js')}}"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-
+        <style>
+            #searchList {
+                display: block;
+                position: relative;
+            }
+        </style>
     </head>
     <body>
         <nav class="navbar navbar-expand-lg bg-body-tertiary bg-primary">
@@ -52,9 +57,14 @@
                             <a href="/kosar" role="button" class="btn btn-primary mx-2" id="mobilKosar"><i class="fa-solid fa-cart-shopping"></i></a>
                         @endauth
                     </div>
-                    <form method="POST" action="/search" class="d-flex px-2" role="search">
+                    <form method="POST" action="" class="d-flex px-2">
                         @csrf
-                        <input class="form-control me-2" id="search" type="text" placeholder="Search" aria-label="Search">
+                        <div>
+                            <input class="form-control me-2" name="search" id="search" type="text" placeholder="Search" aria-label="Search">
+                        </div>
+                        <div id="searchList" class="dropdown" aria-expanded="false" aria-haspopup="true">
+
+                        </div>
                         <button class="btn" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
                     </form>
                     <div class="modal fade justify-content-end" id="loginModal" aria-labelledby="loginModalLabel" tabindex="-1" style="display: none;" aria-hidden="true">
@@ -224,16 +234,29 @@
                 var _token = $("input[name='_token']").val();
                 var search = $(this).val();
 
+
                 $.ajax({
                     type: "POST",
                     url: "{{ route('layout.autocomplete') }}",
-                    data: {_token: _token, search: nev}
+                    data: {_token: _token, search: search},
                     success: function(response){
+                        var html = "";
+
+                        $.each(response, function(key, value){
+                            html = html + "<li><a href='#' class='dropdown-item'>"+value.nev+"</a></li>";
+                        });
+
+                        html = html + "";
+                        $("#searchList").html(html);
                         console.log(response);
                     }
                 });
-            });
+            })
 
+            $(document).on("click", ".dropdown-menu li", function(){
+                $("#search").val($(this).text());
+                $("#searchList").html("");
+            })
         </script>
     </body>
 </html>

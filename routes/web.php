@@ -32,5 +32,3 @@ Route::post('/cart', [WebshopController::class, 'CartData']);
 Route::get('/order', [WebshopController::class, 'Order']);
 
 
-// Route::get('search-autocomplete', [WebshopController::class, 'searchAutocomplete']);
-Route::post('/search', [WebshopController::class, 'searchAutoComplete']);
