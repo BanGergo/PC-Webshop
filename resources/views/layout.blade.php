@@ -72,9 +72,6 @@
                                             <input type="email" name="login_email" id="login_email" class="form-control" >
                                             @error('login_email')
                                                 <span class="text-danger">{{$message}}</span><br>
-                                                <script>
-                                                    $("#loginModal").modal(show: true);
-                                                </script>
                                             @enderror
                                         </div>
                                         <div class="py-2">
