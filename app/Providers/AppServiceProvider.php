@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Models\kategoria;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +20,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        view()->composer('layout', function ($view) {
+
+            $result = kategoria::select('kat_nev', 'kat_id')->get();
+
+            $view->with([
+                'result' => $result,
+            ]);
+        });
     }
 }

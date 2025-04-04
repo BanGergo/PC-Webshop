@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 
 Route::get('/', [WebshopController::class, 'Welcome']);
 Route::post('/', [WebshopController::class, "autocomplete"])->name("layout.autocomplete");
+Route::get('/search/{id}', [WebshopController::class, 'KatKeres']);
 
 Route::view('/reg','reg');
 Route::post('/reg', [UserController::class, 'regData']);

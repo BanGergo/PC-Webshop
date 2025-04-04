@@ -50,7 +50,15 @@ a:hover {
         visibility: visible;
     }
 
-    #searchBar {
+    #search {
         width: 400px;
     }
+}
+
+nav form {
+    margin: auto;
+}
+
+#searchList {
+    visibility: hidden;
 }

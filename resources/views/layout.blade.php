@@ -17,7 +17,7 @@
         <style>
             #searchList {
                 display: block;
-                position: relative;
+                position: absolute;
             }
         </style>
     </head>
@@ -35,9 +35,9 @@
                                 Menü
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="/mind">Mind</a></li>
-                                <li><a class="dropdown-item" href="#">Kategória_2</a></li>
-                                <li><a class="dropdown-item" href="#">Kategória_3</a></li>
+                                @foreach ($result as $row)
+                                    <li class="dropdown-item"><a href="/search/{{$row->kat_id}}">{{$row->nev}}</a></li>
+                                @endforeach
                             </ul>
                         </li>
                     </ul>
@@ -59,11 +59,11 @@
                     </div>
                     <form method="POST" action="" class="d-flex px-2">
                         @csrf
-                        <div>
-                            <input class="form-control me-2" name="search" id="search" type="text" placeholder="Search" aria-label="Search">
-                        </div>
-                        <div id="searchList" class="dropdown" aria-expanded="false" aria-haspopup="true">
+                        <div class="dropdown">
+                            <input class="form-control me-2 dropdown-toggle" name="search" id="search" type="text" placeholder="Keresés" aria-label="Search" data-bs-toggle="dropdown" aria-expanded="false">
+                            <ul class="dropdown-menu" id="searchList">
 
+                            </ul>
                         </div>
                         <button class="btn" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
                     </form>
@@ -242,13 +242,20 @@
                     success: function(response){
                         var html = "";
 
-                        $.each(response, function(key, value){
-                            html = html + "<li><a href='#' class='dropdown-item'>"+value.nev+"</a></li>";
-                        });
+                        if(search.length > 0) {
+                            $.each(response, function(key, value){
+                                html = html + "<li><a href='#' class='dropdown-item'>"+value.nev+"</a></li>";
+                            });
 
-                        html = html + "";
-                        $("#searchList").html(html);
-                        console.log(response);
+                            $("#searchList").css("visibility", "visible");
+                            $("#searchList").html(html);
+                            console.log(response);
+                        }
+                        else
+                        {
+                            $("#searchList").css("visibility", "hidden");
+                            $("#searchList").html("");
+                        }
                     }
                 });
             })

@@ -6,27 +6,31 @@ use Illuminate\Http\Request;
 use App\Models\webshop;
 use App\Models\termek;
 use App\Models\User;
+use App\Models\kategoria;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 
 class WebshopController extends Controller
 {
-
-    public function Search(){
-        $req = Request()->query('search');
-        return view('search', [
-            'result'    => termek::where('nev', 'LIKE', '%'.$req.'%')
-            ->get()
-        ]);
-    }
-
     public function autocomplete(Request $req)
     {
         return termek::query()
                     ->where("nev", "LIKE", "%{$req->search}%")
                     ->take(5)
                     ->get();
+    }
+
+    public function KatKeres($id)
+    {
+        return view('search', [
+            'kategoria' =>kategoria::find($id),
+
+            'result'    =>termek::where('kat_id', $id)
+                                    ->join('gyarto', 'termek.gyarto_id', 'gyarto.gyarto_id')
+                                    ->join('image', 'termek.cikkszam', 'image.cikkszam')
+                                    ->get()
+        ]);
     }
 
     public function termekadddata(Request $req){
