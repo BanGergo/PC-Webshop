@@ -1,0 +1,68 @@
+main{
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.carousel-sizing {
+    width: 300px;
+}
+
+.cim4 {
+    font-weight: bold;
+}
+
+.footer-text {
+    font-weight: bold;
+}
+
+#searchBar {
+    width: 100%;
+}
+
+a:link {
+    color: black;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.dropdown {
+    font-size: large;
+}
+
+@media screen and (max-width: 991px) {
+    .mobilGombok {
+        visibility: visible;
+    }
+
+    .desktopGombok {
+        visibility: hidden;
+    }
+}
+
+@media screen and (min-width: 992px) {
+    .mobilGombok {
+        visibility: hidden;
+    }
+
+    .desktopGombok {
+        visibility: visible;
+    }
+
+    #search {
+        width: 400px;
+    }
+}
+
+nav form {
+    margin: auto;
+}
+
+#searchList {
+    visibility: hidden;
+}
+
+a:visited {
+    color: black;
+}
