@@ -62,3 +62,14 @@ nav form {
 #searchList {
     visibility: hidden;
 }
+
+.navbar-brand {
+    object-fit: contain;
+}
+
+@media screen and (min-width: 992px) {
+    .navbar-brand img {
+        width: 50px;
+        height: 50px;
+    }
+}

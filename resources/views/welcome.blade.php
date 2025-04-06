@@ -34,19 +34,14 @@
             </div>
         </div>
         <div class="container px-5" id="kategoriak">
-            <div class="row py-3">
-                <div class="col-lg py-3">
-                    <a href="#" class="py-3"><img src="./assets/img/sablon-pc.jpg" alt="sablon-pc" class="border border-dark border-3 my-3"></a>
-                    <a href="#" class="py-3"><img src="./assets/img/sablon-pc.jpg" alt="sablon-pc" class="border border-dark border-3 my-3"></a>
-                </div>
-                <div class="col-lg py-3">
-                    <a href="#" class="py-3"><img src="./assets/img/sablon-pc.jpg" alt="sablon-pc" class="border border-dark border-3 my-3"></a>
-                    <a href="#" class="py-3"><img src="./assets/img/sablon-pc.jpg" alt="sablon-pc" class="border border-dark border-3 my-3"></a>
-                </div>
-                <div class="col-lg py-3">
-                    <a href="#" class="py-3"><img src="./assets/img/sablon-pc.jpg" alt="sablon-pc" class="border border-dark border-3 my-3"></a>
-                    <a href="#" class="py-3"><img src="./assets/img/sablon-pc.jpg" alt="sablon-pc" class="border border-dark border-3 my-3"></a>
-                </div>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 py-3 px-3">
+                @foreach ($result as $row)
+                    <div class="card my-3">
+                        <div class="card-body">
+                            <img src="{{asset('assets/img/kategoriak/'. $row->kat_id. '.jpg')}}" alt="{{$row->kat_nev}}.jpg" class="w-100">
+                        </div>
+                    </div>
+                @endforeach
             </div>
         </div>
 @endsection

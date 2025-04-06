@@ -221,6 +221,8 @@ class WebshopController extends Controller
 
     public function Welcome()
     {
-        return view('welcome');
+        return view('welcome', [
+            'result' => kategoria::all()
+        ]);
     }
 }

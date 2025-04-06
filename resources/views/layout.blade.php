@@ -24,7 +24,7 @@
     <body>
         <nav class="navbar navbar-expand-lg bg-body-tertiary bg-primary">
             <div class="container-fluid">
-                <a href="/" class="navbar-brand"><i class="fa-solid fa-house"></i></a>
+                <a href="/" class="navbar-brand"><img src="{{asset('/assets/img/favicon.png')}}" alt="Home"></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
                 </button>
@@ -32,11 +32,11 @@
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Menü
+                                Kategóriák
                             </a>
                             <ul class="dropdown-menu">
                                 @foreach ($result as $row)
-                                    <li class="dropdown-item"><a href="/search/{{$row->kat_id}}">{{$row->nev}}</a></li>
+                                    <li class="dropdown-item"><a href="/search/{{$row->kat_id}}">{{$row->kat_nev}}</a></li>
                                 @endforeach
                             </ul>
                         </li>
