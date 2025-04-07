@@ -6,7 +6,6 @@ use App\Http\Controllers\UserController;
 
 Route::get('/', [WebshopController::class, 'Welcome']);
 Route::post('/', [WebshopController::class, "autocomplete"])->name("layout.autocomplete");
-Route::get('/search/{id}', [WebshopController::class, 'search']);
 
 Route::view('/reg','reg');
 Route::post('/reg', [UserController::class, 'regData']);
@@ -32,4 +31,6 @@ Route::get('/cart', [WebshopController::class, 'Cart']);
 Route::post('/cart', [WebshopController::class, 'CartData']);
 Route::get('/order', [WebshopController::class, 'Order']);
 
-
+Route::get('/products', [WebshopController::class, 'index'])->name('products.index');
+Route::get('/products/filter', [WebshopController::class, 'filter'])->name('products.filter');
+Route::get('/products/category/{category}', [WebshopController::class, 'filterByCategory'])->name('products.byCategory');

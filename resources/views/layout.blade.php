@@ -36,7 +36,9 @@
                             </a>
                             <ul class="dropdown-menu">
                                 @foreach ($result as $row)
-                                    <li class="dropdown-item"><a href="/search/{{$row->kat_id}}">{{$row->kat_nev}}</a></li>
+                                    <li class="dropdown-item">
+                                        <a href="{{ route('products.byCategory', ['category' => $row->kat_id]) }}">{{$row->kat_nev}}</a>
+                                    </li>
                                 @endforeach
                             </ul>
                         </li>

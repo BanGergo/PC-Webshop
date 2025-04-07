@@ -32,16 +32,53 @@ class WebshopController extends Controller
                     ->get();
     }
 
-    public function search($id, Request $request)
+    public function filterByCategory($category, Request $request)
     {
-        $category = $request->query('kat_id');
-        $products = termek::when($category, function ($query, $category) {
-            return $query->where('kat_id', $category);
-        })->get();
+        $selectedCategory = kategoria::select('kat_nev')
+                                        ->where('kat_id', $category)
+                                        ->get();
 
-        $categories = termek::select('kat_id')->distinct()->pluck('kat_id');
+        $gyartok = gyarto::select('gyarto.*')
+                        ->distinct()
+                        ->join('termek', 'termek.gyarto_id', 'gyarto.gyarto_id')
+                        ->where('termek.kat_id', $category)
+                        ->get();
 
-        return view('search', compact('products', 'categories', 'category'));
+        $query = termek::query()
+                        ->join('image', 'image.cikkszam', '=', 'termek.cikkszam');
+
+        if(isset($request->gyarto)){
+            $query->where('termek.gyarto_id', $request->gyarto);
+        }
+
+        $products = $query->where('termek.kat_id', $category)
+                        ->get();
+
+        return view('products.filtered', compact('gyartok', 'products', 'selectedCategory'));
+    }
+
+    public function filter($category, Request $request)
+    {
+
+        $selectedCategory = kategoria::find($category);
+
+        $gyartok = gyarto::select('gyarto.*')
+                        ->distinct()
+                        ->join('termek', 'termek.gyarto_id', 'gyarto.gyarto_id')
+                        ->where('termek.kat_id', $category)
+                        ->get();
+
+        $query = termek::query()
+                        ->join('image', 'image.cikkszam', '=', 'termek.cikkszam');
+
+        if(isset($request->gyarto)){
+            $query->where('termek.gyarto_id', $request->gyarto);
+        }
+
+        $products = $query->where('termek.kat_id', $category)
+                        ->get();
+
+        return view('products.filtered', compact('gyartok', 'products', 'selectedCategory'));
 
     }
 
