@@ -52,8 +52,7 @@
                                 <a href="/kosar" role="button" class="btn btn-primary mx-2" id="mobilKosar"><i class="fa-solid fa-cart-shopping"></i></a>
                             @endif
                         @else
-                            <a href="/login" class="btn btn-primary" id="mobilProfil"><i class="fa-solid fa-user"></i></a>
-                            {{-- <a class="btn btn-primary" data-bs-target="#loginModal" data-bs-toggle="modal" id="mobilProfil"><i class="fa-solid fa-user"></i></a> --}}
+                            <a class="btn btn-primary" data-bs-target="#loginModal" data-bs-toggle="modal" id="mobilProfil"><i class="fa-solid fa-user"></i></a>
                             <a href="/kosar" role="button" class="btn btn-primary mx-2" id="mobilKosar"><i class="fa-solid fa-cart-shopping"></i></a>
                         @endauth
                     </div>
@@ -244,7 +243,7 @@
 
                         if(search.length > 0) {
                             $.each(response, function(key, value){
-                                html = html + "<li><a href='#' class='dropdown-item'>"+value.nev+"</a></li>";
+                                html = html + "<li><a href='#' class='dropdown-item'>"+value.termek_nev+"</a></li>";
                             });
 
                             $("#searchList").css("visibility", "visible");

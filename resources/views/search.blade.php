@@ -13,7 +13,7 @@
                 </table>
             </div>
             <div class="col-md-8">
-                @dd($result)
+                {{-- @dd($result) --}}
                 @foreach ($result as $row)
                     <div class="card">
                         <img src="{{$row->url}}" alt="{{$row->termek_nev}}">

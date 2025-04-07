@@ -73,3 +73,19 @@ nav form {
         height: 50px;
     }
 }
+
+nav a:visited {
+    color: black;
+}
+
+nav #mobilKosar {
+    color: white;
+}
+
+nav #desktopKosar {
+    color: white;
+}
+
+.card-body a {
+    color: black;
+}

@@ -16,7 +16,7 @@ class WebshopController extends Controller
     public function autocomplete(Request $req)
     {
         return termek::query()
-                    ->where("nev", "LIKE", "%{$req->search}%")
+                    ->where("termek_nev", "LIKE", "%{$req->search}%")
                     ->take(5)
                     ->get();
     }
@@ -28,7 +28,6 @@ class WebshopController extends Controller
 
             'result'    =>termek::where('kat_id', $id)
                                     ->join('gyarto', 'termek.gyarto_id', 'gyarto.gyarto_id')
-                                    ->join('image', 'termek.cikkszam', 'image.cikkszam')
                                     ->get()
         ]);
     }
