@@ -34,3 +34,6 @@ Route::get('/order', [WebshopController::class, 'Order']);
 Route::get('/products', [WebshopController::class, 'index'])->name('products.index');
 Route::get('/products/filter', [WebshopController::class, 'filter'])->name('products.filter');
 Route::get('/products/category/{category}', [WebshopController::class, 'filterByCategory'])->name('products.byCategory');
+Route::get('/products/{product}', [WebshopController::class, 'adatlap'])->name('products.adatlap');
+Route::post('/products/{product}/review', [WebshopController::class, 'addReview'])->name('products.addReview');
+Route::get('/products/{product}/reviews', [WebshopController::class, 'showReviews'])->name('products.showReviews');

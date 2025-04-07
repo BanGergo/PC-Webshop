@@ -36,7 +36,7 @@ class UserController extends Controller
         ]);
 
         $data = new User;
-        $data->nev = $req->nev;
+        $data->username = $req->nev;
         $data->email = $req->email;
         $data->password = Hash::make($req->password);
         $data->status = 1;

@@ -62,7 +62,7 @@
                                         <h5>{{ $product->termek_nev }}</h5>
                                         <p class="text-danger fw-bold">{{ number_format($product->netto, 0, ',', ' ') }} Ft</p>
                                         <p>{{ Str::limit($product->leiras, 100) }}</p>
-                                        <a href="#" class="btn btn-primary">Részletek</a>
+                                        <a href="/products/{{$product->cikkszam}}" class="btn btn-primary">Részletek</a>
                                         <!-- Add to cart button could go here -->
                                     </div>
                                 </div>

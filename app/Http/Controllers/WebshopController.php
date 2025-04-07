@@ -92,6 +92,52 @@ class WebshopController extends Controller
         return view('products.filtered', compact('gyartok', 'products', 'selectedCategory', 'request'));
     }
 
+    public function adatlap($cikkszam)
+    {
+        $termek = termek::where('cikkszam', $cikkszam)->first();
+        $images = image::where('cikkszam', $cikkszam)->get();
+        $reviews = review::where('cikkszam', $cikkszam)->get();
+
+        return view('products.adatlap', [
+            'termek' => $termek,
+            'images' => $images,
+            'reviews' => $reviews
+        ]);
+    }
+    public function addReview(Request $req, $cikkszam)
+    {
+        $req->validate([
+            'rating' => 'required|integer|min:1|max:5',
+            'comment' => 'required|string|max:255'
+        ]);
+
+        $termek = termek::where('cikkszam', $cikkszam)->first();
+
+        $review = new review();
+        $review->cikkszam = $termek->cikkszam;
+        $review->user_id = Auth::id();
+        $review->rating = $req->rating;
+        $review->comment = $req->comment;
+        $review->save();
+
+        return redirect()->back()->with('success', 'Review added successfully!');
+    }
+    public function showReviews($cikkszam)
+    {
+        $termek = termek::where('cikkszam', $cikkszam)->first();
+        $reviews = review::where('termek_id', $termek->id)->get();
+
+        return view('products.showReviews', [
+            'termek' => $termek,
+            'reviews' => $reviews
+        ]);
+    }
+    public function index()
+    {
+        $termekek = termek::all();
+        return view('products.index', compact('termekek'));
+    }
+
     public function termekadddata(Request $req){
         $req->validate([
             'tnev' => 'required',
