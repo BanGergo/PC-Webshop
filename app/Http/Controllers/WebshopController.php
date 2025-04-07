@@ -7,6 +7,17 @@ use App\Models\webshop;
 use App\Models\termek;
 use App\Models\User;
 use App\Models\kategoria;
+use App\Models\billing;
+use App\Models\guest;
+use App\Models\gyarto;
+use App\Models\image;
+use App\Models\loyalty;
+use App\Models\ranks;
+use App\Models\rendeles_tetel;
+use App\Models\rendeles_torzs;
+use App\Models\review;
+use App\Models\tulajdonsag_nev;
+use App\Models\tulajdonsag;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -21,15 +32,17 @@ class WebshopController extends Controller
                     ->get();
     }
 
-    public function KatKeres($id)
+    public function search($id, Request $request)
     {
-        return view('search', [
-            'kategoria' =>kategoria::find($id),
+        $category = $request->query('kat_id');
+        $products = termek::when($category, function ($query, $category) {
+            return $query->where('kat_id', $category);
+        })->get();
 
-            'result'    =>termek::where('kat_id', $id)
-                                    ->join('gyarto', 'termek.gyarto_id', 'gyarto.gyarto_id')
-                                    ->get()
-        ]);
+        $categories = termek::select('kat_id')->distinct()->pluck('kat_id');
+
+        return view('search', compact('products', 'categories', 'category'));
+
     }
 
     public function termekadddata(Request $req){
