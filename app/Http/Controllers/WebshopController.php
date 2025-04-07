@@ -34,32 +34,6 @@ class WebshopController extends Controller
 
     public function filterByCategory($category, Request $request)
     {
-        $selectedCategory = kategoria::select('kat_nev')
-                                        ->where('kat_id', $category)
-                                        ->get();
-
-        $gyartok = gyarto::select('gyarto.*')
-                        ->distinct()
-                        ->join('termek', 'termek.gyarto_id', 'gyarto.gyarto_id')
-                        ->where('termek.kat_id', $category)
-                        ->get();
-
-        $query = termek::query()
-                        ->join('image', 'image.cikkszam', '=', 'termek.cikkszam');
-
-        if(isset($request->gyarto)){
-            $query->where('termek.gyarto_id', $request->gyarto);
-        }
-
-        $products = $query->where('termek.kat_id', $category)
-                        ->get();
-
-        return view('products.filtered', compact('gyartok', 'products', 'selectedCategory'));
-    }
-
-    public function filter($category, Request $request)
-    {
-
         $selectedCategory = kategoria::find($category);
 
         $gyartok = gyarto::select('gyarto.*')
@@ -78,8 +52,44 @@ class WebshopController extends Controller
         $products = $query->where('termek.kat_id', $category)
                         ->get();
 
-        return view('products.filtered', compact('gyartok', 'products', 'selectedCategory'));
+        return view('products.filtered', compact('gyartok', 'products', 'selectedCategory', 'request'));
+    }
 
+    public function filter(Request $request)
+    {
+        // Get the category from the request
+        $category = $request->category;
+        $selectedCategory = kategoria::find($category);
+
+        // Get manufacturers for the selected category
+        $gyartok = gyarto::select('gyarto.*')
+                        ->distinct()
+                        ->join('termek', 'termek.gyarto_id', 'gyarto.gyarto_id')
+                        ->where('termek.kat_id', $category)
+                        ->get();
+
+        // Start building the product query
+        $query = termek::query()
+                        ->join('image', 'image.cikkszam', '=', 'termek.cikkszam')
+                        ->where('termek.kat_id', $category);
+
+        // Filter by manufacturer if selected
+        if(isset($request->gyarto) && $request->gyarto != ''){
+            $query->where('termek.gyarto_id', $request->gyarto);
+        }
+
+        // Filter by price range if set
+        if(isset($request->min_price) && $request->min_price != ''){
+            $query->where('termek.netto', '>=', $request->min_price);
+        }
+
+        if(isset($request->max_price) && $request->max_price != ''){
+            $query->where('termek.netto', '<=', $request->max_price);
+        }
+
+        $products = $query->get();
+
+        return view('products.filtered', compact('gyartok', 'products', 'selectedCategory', 'request'));
     }
 
     public function termekadddata(Request $req){

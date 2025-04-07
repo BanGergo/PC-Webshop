@@ -5,30 +5,75 @@
         <hr class="mx-auto w-50">
         <div class="row">
             <div class="col-md-4">
-                <form action="{{ url('/products/category/'.$selectedCategory) }}" method="get">
-                    <label for="gyarto" class="form-label">Gyártók</label>
-                    <select name="gyarto" id="gyarto" onchange="this.form.submit">
-                        <option value="">Összes</option>
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Szűrők</h5>
+                    </div>
+                    <div class="card-body">
+                        <form action="{{ route('products.filter') }}" method="get">
+                            <!-- Hidden input to keep track of category -->
+                            <input type="hidden" name="category" value="{{ $selectedCategory->kat_id }}">
 
-                        @foreach ($gyartok as $gyarto)
-                            <option value="{{ $gyarto->gyarto_id }}">{{ $gyarto->gyarto_nev }}</option>
-                        @endforeach
-                    </select>
-                    <button type="submit">Filter</button>
-                </form>
+                            <!-- Manufacturer filter -->
+                            <div class="mb-3">
+                                <label for="gyarto" class="form-label">Gyártók</label>
+                                <select name="gyarto" id="gyarto" class="form-select" onchange="this.form.submit()">
+                                    <option value="">Összes</option>
+                                    @foreach ($gyartok as $gyarto)
+                                        <option value="{{ $gyarto->gyarto_id }}" {{ isset($request) && $request->gyarto == $gyarto->gyarto_id ? 'selected' : '' }}>
+                                            {{ $gyarto->gyarto_nev }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <!-- Price range filter -->
+                            <div class="mb-3">
+                                <label class="form-label">Ár tartomány</label>
+                                <div class="row">
+                                    <div class="col">
+                                        <input type="number" name="min_price" class="form-control" placeholder="Min Ft"
+                                            value="{{ isset($request) ? $request->min_price : '' }}">
+                                    </div>
+                                    <div class="col-1 text-center">-</div>
+                                    <div class="col">
+                                        <input type="number" name="max_price" class="form-control" placeholder="Max Ft"
+                                            value="{{ isset($request) ? $request->max_price : '' }}">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Szűrés</button>
+                            <a href="{{ route('products.byCategory', ['category' => $selectedCategory->kat_id]) }}" class="btn btn-secondary">Alaphelyzet</a>
+                        </form>
+                    </div>
+                </div>
             </div>
             <div class="col-md-8">
-                @forelse ($products as $product)
-                    <div class="card">
-                        <div class="card-body">
-                            <img src="{{$product->url}}" alt="{{$product->termek_nev}}" class="w-25 px-2" style="float: left">
-                            <h5>{{ $product->termek_nev }}</h5>
-                            <p>{{ $product->netto * 1.27 }} Ft</p>
+                @if ($products->count() > 0)
+                    @foreach ($products as $product)
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <img src="{{$product->url}}" alt="{{$product->termek_nev}}" class="img-fluid">
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h5>{{ $product->termek_nev }}</h5>
+                                        <p class="text-danger fw-bold">{{ number_format($product->netto, 0, ',', ' ') }} Ft</p>
+                                        <p>{{ Str::limit($product->leiras, 100) }}</p>
+                                        <a href="#" class="btn btn-primary">Részletek</a>
+                                        <!-- Add to cart button could go here -->
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+                    @endforeach
+                @else
+                    <div class="alert alert-info">
+                        Nincs találat a megadott szűrési feltételekkel.
                     </div>
-                @empty
-
-                @endforelse
+                @endif
             </div>
         </div>
     </div>

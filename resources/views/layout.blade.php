@@ -36,9 +36,7 @@
                             </a>
                             <ul class="dropdown-menu">
                                 @foreach ($result as $row)
-                                    <li class="dropdown-item">
-                                        <a href="{{ route('products.byCategory', ['category' => $row->kat_id]) }}">{{$row->kat_nev}}</a>
-                                    </li>
+                                    <a href="{{ route('products.byCategory', ['category' => $row->kat_id]) }}"><li class="dropdown-item">{{$row->kat_nev}}</li></a>
                                 @endforeach
                             </ul>
                         </li>
@@ -259,11 +257,6 @@
                         }
                     }
                 });
-            })
-
-            $(document).on("click", ".dropdown-menu li", function(){
-                $("#search").val($(this).text());
-                $("#searchList").html("");
             })
         </script>
     </body>
