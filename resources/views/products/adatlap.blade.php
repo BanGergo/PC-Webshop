@@ -34,7 +34,7 @@
         <div class="col-md-6">
             <h1 class="mb-4">{{ $termek->termek_nev }}</h1>
             <div class="mb-3">
-                <span class="h3 text-danger fw-bold">{{ number_format($termek->netto, 0, ',', ' ') }} Ft</span>
+                <span class="h3 text-danger fw-bold">{{ number_format($termek->netto * $termek->afa, 0, ',', ' ') }} Ft</span>
                 @if($termek->kedv > 0)
                     <span class="badge bg-danger ms-2">-{{ $termek->kedv }}%</span>
                 @endif
@@ -114,7 +114,7 @@
                     </form>
                 @else
                     <div class="alert alert-info">
-                        A véleményezéshez kérjük, <a href="/login">jelentkezzen be</a>!
+                        A véleményezéshez kérjük, <a class="btn btn-primary" data-bs-target="#loginModal" data-bs-toggle="modal" id="mobilProfil">jelentkezzen be</a>!
                     </div>
                 @endauth
             </div>

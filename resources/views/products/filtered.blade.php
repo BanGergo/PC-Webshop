@@ -27,6 +27,23 @@
                                 </select>
                             </div>
 
+                            <div class="mb-3">
+                                @foreach ($tulajdonsagok as $tulajdonsag)
+                                    <label for="tulajdonsag">{{$tulajdonsag->tul_nev}}</label>
+                                    <select name="tulajdonsag" id="tulajdonsag" class="form-select" onchange="this.form.submit()">
+                                        <option value="">Összes</option>
+                                        @foreach ($tulajdonsagok_ertek as $ertek)
+
+                                            @if (str_contains($ertek, "mag"))
+                                            <option value="{{ $ertek->tul_nev_id }}" {{ isset($request) && $request->tulajdonsag == $ertek->tul_nev_id ? 'selected' : '' }}>
+                                                {{ $ertek->tulajdonsag }}
+                                            </option>
+                                            @endif
+                                        @endforeach
+                                    </select>
+                                @endforeach
+                            </div>
+
                             <!-- Price range filter -->
                             <div class="mb-3">
                                 <label class="form-label">Ár tartomány</label>

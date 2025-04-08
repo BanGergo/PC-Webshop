@@ -16,7 +16,6 @@ use App\Models\ranks;
 use App\Models\rendeles_tetel;
 use App\Models\rendeles_torzs;
 use App\Models\review;
-use App\Models\tulajdonsag_nev;
 use App\Models\tulajdonsag;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Hash;
@@ -42,6 +41,17 @@ class WebshopController extends Controller
                         ->where('termek.kat_id', $category)
                         ->get();
 
+        $tulajdonsagok = tulajdonsag::select('tulajdonsag.tul_nev')
+                        ->distinct()
+                        ->join('termek', 'termek.cikkszam', 'tulajdonsag.cikkszam')
+                        ->where('termek.kat_id', $category)
+                        ->get();
+
+        $tulajdonsagok_ertek = tulajdonsag::select('tulajdonsag.tulajdonsag', 'tulajdonsag.tul_nev_id')
+                                ->join('termek', 'termek.cikkszam', 'tulajdonsag.cikkszam')
+                                ->where('termek.kat_id', $category)
+                                ->get();
+
         $query = termek::query()
                         ->join('image', 'image.cikkszam', '=', 'termek.cikkszam');
 
@@ -52,7 +62,7 @@ class WebshopController extends Controller
         $products = $query->where('termek.kat_id', $category)
                         ->get();
 
-        return view('products.filtered', compact('gyartok', 'products', 'selectedCategory', 'request'));
+        return view('products.filtered', compact('gyartok', 'products', 'selectedCategory', 'request', 'tulajdonsagok', 'tulajdonsagok_ertek'));
     }
 
     public function filter(Request $request)
@@ -67,6 +77,17 @@ class WebshopController extends Controller
                         ->join('termek', 'termek.gyarto_id', 'gyarto.gyarto_id')
                         ->where('termek.kat_id', $category)
                         ->get();
+
+        $tulajdonsagok = tulajdonsag::select('tulajdonsag.tul_nev')
+                        ->distinct()
+                        ->join('termek', 'termek.cikkszam', 'tulajdonsag.cikkszam')
+                        ->where('termek.kat_id', $category)
+                        ->get();
+
+        $tulajdonsagok_ertek = tulajdonsag::select('tulajdonsag.tulajdonsag', 'tulajdonsag.tul_nev_id')
+                                ->join('termek', 'termek.cikkszam', 'tulajdonsag.cikkszam')
+                                ->where('termek.kat_id', $category)
+                                ->get();
 
         // Start building the product query
         $query = termek::query()
@@ -89,7 +110,7 @@ class WebshopController extends Controller
 
         $products = $query->get();
 
-        return view('products.filtered', compact('gyartok', 'products', 'selectedCategory', 'request'));
+        return view('products.filtered', compact('gyartok', 'products', 'selectedCategory', 'request', 'tulajdonsagok', 'tulajdonsagok_ertek'));
     }
 
     public function adatlap($cikkszam)
