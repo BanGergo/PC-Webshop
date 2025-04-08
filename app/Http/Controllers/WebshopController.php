@@ -17,6 +17,9 @@ use App\Models\rendeles_tetel;
 use App\Models\rendeles_torzs;
 use App\Models\review;
 use App\Models\tulajdonsag;
+use App\Models\termek_tul;
+use App\Models\kat_tul;
+use App\Models\filter_options;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -41,16 +44,42 @@ class WebshopController extends Controller
                         ->where('termek.kat_id', $category)
                         ->get();
 
-        $tulajdonsagok = tulajdonsag::select('tulajdonsag.tul_nev')
+        $tulajdonsagok = tulajdonsag::select('tulajdonsag.tul_nev', 'tulajdonsag.tul_nev_id', 'kat_tul.kat_tul_id', 'filter_options.mode')
                         ->distinct()
-                        ->join('termek', 'termek.cikkszam', 'tulajdonsag.cikkszam')
-                        ->where('termek.kat_id', $category)
+                        ->join('kat_tul', 'kat_tul.tul_nev_id', 'tulajdonsag.tul_nev_id')
+                        ->join('filter_options', 'filter_options.tul_nev_id', 'tulajdonsag.tul_nev_id')
+                        ->where('kat_tul.kat_id', $category)
+                        ->whereNotNull('filter_options.mode')
                         ->get();
 
-        $tulajdonsagok_ertek = tulajdonsag::select('tulajdonsag.tulajdonsag', 'tulajdonsag.tul_nev_id')
-                                ->join('termek', 'termek.cikkszam', 'tulajdonsag.cikkszam')
-                                ->where('termek.kat_id', $category)
-                                ->get();
+        $tul_ertek_min = termek_tul::selectRaw("MIN(CAST(termek_tul.tul_ertek AS DECIMAL)) as min_value, kat_tul.tul_nev_id")
+                                    ->join('kat_tul', 'kat_tul.kat_tul_id', 'termek_tul.kat_tul_id')
+                                    ->join('tulajdonsag', 'kat_tul.tul_nev_id', 'tulajdonsag.tul_nev_id')
+                                    ->join('filter_options', 'filter_options.tul_nev_id', 'tulajdonsag.tul_nev_id')
+                                    ->where('filter_options.mode', 'range')
+                                    ->whereNotNull('filter_options.mode')
+                                    ->groupBy('kat_tul.tul_nev_id')
+                                    ->get()
+                                    ->pluck('min_value', 'tul_nev_id')
+                                    ->toArray();
+
+        $tul_ertek_max = termek_tul::selectRaw("MAX(CAST(termek_tul.tul_ertek AS DECIMAL)) as max_value, kat_tul.tul_nev_id")
+                                    ->join('kat_tul', 'kat_tul.kat_tul_id', 'termek_tul.kat_tul_id')
+                                    ->join('tulajdonsag', 'kat_tul.tul_nev_id', 'tulajdonsag.tul_nev_id')
+                                    ->join('filter_options', 'filter_options.tul_nev_id', 'tulajdonsag.tul_nev_id')
+                                    ->where('filter_options.mode', 'range')
+                                    ->whereNotNull('filter_options.mode')
+                                    ->groupBy('kat_tul.tul_nev_id')
+                                    ->get()
+                                    ->pluck('max_value', 'tul_nev_id')
+                                    ->toArray();
+
+        $tulajdonsagok_ertek = termek_tul::select('termek_tul.tul_ertek', 'kat_tul.kat_tul_id')
+                                        ->distinct()
+                                        ->join('kat_tul', 'kat_tul.kat_tul_id', 'termek_tul.kat_tul_id')
+                                        ->join('tulajdonsag', 'tulajdonsag.tul_nev_id', 'kat_tul.tul_nev_id')
+                                        ->where('kat_tul.kat_id', $category)
+                                        ->get();
 
         $query = termek::query()
                         ->join('image', 'image.cikkszam', '=', 'termek.cikkszam');
@@ -62,7 +91,7 @@ class WebshopController extends Controller
         $products = $query->where('termek.kat_id', $category)
                         ->get();
 
-        return view('products.filtered', compact('gyartok', 'products', 'selectedCategory', 'request', 'tulajdonsagok', 'tulajdonsagok_ertek'));
+        return view('products.filtered', compact('gyartok', 'products', 'selectedCategory', 'request', 'tulajdonsagok', 'tulajdonsagok_ertek', 'tul_ertek_min', 'tul_ertek_max'));
     }
 
     public function filter(Request $request)
@@ -146,7 +175,7 @@ class WebshopController extends Controller
     public function showReviews($cikkszam)
     {
         $termek = termek::where('cikkszam', $cikkszam)->first();
-        $reviews = review::where('termek_id', $termek->id)->get();
+        $reviews = review::where('cikkszam', $termek->id)->get();
 
         return view('products.showReviews', [
             'termek' => $termek,
@@ -325,13 +354,13 @@ class WebshopController extends Controller
     }
     public function Add(Request $req){
         ##dd($req);
-        $termek  = termekek::find($req->termek_id);
+        $termek  = termek::find($req->cikkszam);
         $cart = session()->get('cart');
         if(isset($cart[$termek->termekek_id])){
             $cart[$termek->termekek_id]['db'] = $cart[$termek->termekek_id]['db']+1;
         } else {
             $cart[$termek->termekek_id] = [
-                'termek_id' => $termek->termekek_id,
+                'cikkszam' => $termek->termekek_id,
                 'nev'       => $termek->nev,
                 'ar'        => $termek->ar,
                 'db'        => 1
@@ -341,7 +370,7 @@ class WebshopController extends Controller
         session()->put('cart',$cart);
         ##dd($cart);
         return view('add', [
-            'termekek_id'   => $req->termek_id
+            'termekek_id'   => $req->cikkszam
         ]);
     }
 
