@@ -243,7 +243,7 @@
 
                         if(search.length > 0) {
                             $.each(response, function(key, value){
-                                html = html + "<li><a href='#' class='dropdown-item'>"+value.termek_nev+"</a></li>";
+                                html = html + "<li><a href='/product/'"+value.cikkszam+" class='dropdown-item'>"+value.termek_nev+"</a></li>";
                             });
 
                             $("#searchList").css("visibility", "visible");

@@ -3,7 +3,7 @@
         display: flex;
         flex-direction: column;
         width: 80%;
-        margin: 35% auto;
+        margin: 15px auto;
     }
 
     .sliders_control {
@@ -90,7 +90,7 @@
                         <h5>Szűrők</h5>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('products.filter') }}" method="get">
+                        <form action="{{ route('products.filter') }}" method="get" id="filter_form">
                             <!-- Hidden input to keep track of category -->
                             <input type="hidden" name="category" value="{{ $selectedCategory->kat_id }}">
 
@@ -112,13 +112,13 @@
                                 @foreach ($tulajdonsagok as $tulajdonsag)
                                     <label for="{{ $tulajdonsag->tul_nev_id }}">{{ $tulajdonsag->tul_nev }}</label>
                                     @if ($tulajdonsag->mode == 'exact')
-                                        <select name="tulajdonsag" id="tulajdonsag" class="form-select"
+                                        <select name="tulajdonsag_{{ $tulajdonsag->tul_nev_id }}" id="tulajdonsag" class="form-select"
                                             onchange="this.form.submit()">
                                             <option value="">Összes</option>
                                             @foreach ($tulajdonsagok_ertek as $ertek)
                                                 @if ($ertek->kat_tul_id == $tulajdonsag->kat_tul_id)
-                                                    <option value="{{ $ertek->tul_ertek_id }}"
-                                                        {{ isset($request) && $request->tulajdonsag == $ertek->tul_ertek_id ? 'selected' : '' }}>
+                                                    <option value="{{ $ertek->tul_ertek }}"
+                                                        {{ isset($request) && request()->get("tulajdonsag_$tulajdonsag->tul_nev_id") == $ertek->tul_ertek ? 'selected' : '' }}>
                                                         {{ $ertek->tul_ertek }}
                                                     </option>
                                                 @endif
@@ -128,22 +128,24 @@
                                         <div class="range_container">
                                             <div class="sliders_control">
                                                 <input id="fromSlider_{{ $tulajdonsag->tul_nev_id }}" type="range"
-                                                    value="{{ $tul_ertek_min[$tulajdonsag->tul_nev_id] }}"
+                                                    value="{{ isset($request) && request()->get("min_$tulajdonsag->tul_nev_id") != null ? request()->get("min_$tulajdonsag->tul_nev_id") : $tul_ertek_min[$tulajdonsag->tul_nev_id] }}"
                                                     min="{{ $tul_ertek_min[$tulajdonsag->tul_nev_id] }}"
                                                     max="{{ $tul_ertek_max[$tulajdonsag->tul_nev_id] }}"
-                                                    name="min_{{ $tulajdonsag->tul_nev_id }}" />
+                                                    name="min_{{ $tulajdonsag->tul_nev_id }}"
+                                                    onchange="handleChange(this)"/>
                                                 <input id="toSlider_{{ $tulajdonsag->tul_nev_id }}" type="range"
-                                                    value="{{ $tul_ertek_max[$tulajdonsag->tul_nev_id] }}"
+                                                    value="{{ isset($request) && request()->get("max_$tulajdonsag->tul_nev_id") != null ? request()->get("max_$tulajdonsag->tul_nev_id") : $tul_ertek_max[$tulajdonsag->tul_nev_id] }}"
                                                     min="{{ $tul_ertek_min[$tulajdonsag->tul_nev_id] }}"
                                                     max="{{ $tul_ertek_max[$tulajdonsag->tul_nev_id] }}"
-                                                    name="max_{{ $tulajdonsag->tul_nev_id }}" />
+                                                    name="max_{{ $tulajdonsag->tul_nev_id }}"
+                                                    onchange="handleChange(this)"/>
                                             </div>
                                             <div class="form_control">
                                                 <div class="form_control_container">
                                                     <div class="form_control_container__time">Min</div>
                                                     <input class="form_control_container__time__input" type="number"
                                                         id="fromInput_{{ $tulajdonsag->tul_nev_id }}"
-                                                        value="{{ $tul_ertek_min[$tulajdonsag->tul_nev_id] }}"
+                                                        value="{{ isset($request) && request()->get("min_$tulajdonsag->tul_nev_id") != null ? request()->get("min_$tulajdonsag->tul_nev_id") : $tul_ertek_min[$tulajdonsag->tul_nev_id] }}"
                                                         min="{{ $tul_ertek_min[$tulajdonsag->tul_nev_id] }}"
                                                         max="{{ $tul_ertek_max[$tulajdonsag->tul_nev_id] }}" />
                                                 </div>
@@ -151,7 +153,7 @@
                                                     <div class="form_control_container__time">Max</div>
                                                     <input class="form_control_container__time__input" type="number"
                                                         id="toInput_{{ $tulajdonsag->tul_nev_id }}"
-                                                        value="{{ $tul_ertek_max[$tulajdonsag->tul_nev_id] }}"
+                                                        value="{{ isset($request) && request()->get("max_$tulajdonsag->tul_nev_id") != null ? request()->get("max_$tulajdonsag->tul_nev_id") : $tul_ertek_max[$tulajdonsag->tul_nev_id] }}"
                                                         min="{{ $tul_ertek_min[$tulajdonsag->tul_nev_id] }}"
                                                         max="{{ $tul_ertek_max[$tulajdonsag->tul_nev_id] }}" />
                                                 </div>
@@ -214,118 +216,44 @@
         </div>
     </div>
     <script text="javascript">
-        function controlFromInput(fromSlider, fromInput, toInput, controlSlider) {
-            const [from, to] = getParsed(fromInput, toInput);
-            fillSlider(fromInput, toInput, '#C6C6C6', '#25daa5', controlSlider);
-            if (from > to) {
-                fromSlider.value = to;
-                fromInput.value = to;
-            } else {
-                fromSlider.value = from;
-            }
-        }
-
-        function controlToInput(toSlider, fromInput, toInput, controlSlider) {
-            const [from, to] = getParsed(fromInput, toInput);
-            fillSlider(fromInput, toInput, '#C6C6C6', '#25daa5', controlSlider);
-            setToggleAccessible(toInput);
-            if (from <= to) {
-                toSlider.value = to;
-                toInput.value = to;
-            } else {
-                toInput.value = from;
-            }
-        }
-
-        function controlFromSlider(fromSlider, toSlider, fromInput) {
-            const [from, to] = getParsed(fromSlider, toSlider);
-            fillSlider(fromSlider, toSlider, '#C6C6C6', '#25daa5', toSlider);
-            if (from > to) {
-                fromSlider.value = to;
-                fromInput.value = to;
-            } else {
-                fromInput.value = from;
-            }
-        }
-
-        function controlToSlider(fromSlider, toSlider, toInput) {
-            const [from, to] = getParsed(fromSlider, toSlider);
-            fillSlider(fromSlider, toSlider, '#C6C6C6', '#25daa5', toSlider);
-            setToggleAccessible(toSlider);
-            if (from <= to) {
-                toSlider.value = to;
-                toInput.value = to;
-            } else {
-                toInput.value = from;
-                toSlider.value = from;
-            }
-        }
-
-        function getParsed(currentFrom, currentTo) {
-            const from = parseInt(currentFrom.value, 10);
-            const to = parseInt(currentTo.value, 10);
-            return [from, to];
-        }
-
-        function fillSlider(from, to, sliderColor, rangeColor, controlSlider) {
-            const rangeDistance = to.max - to.min;
-            const fromPosition = from.value - to.min;
-            const toPosition = to.value - to.min;
-            controlSlider.style.background = `linear-gradient(
-      to right,
-      ${sliderColor} 0%,
-      ${sliderColor} ${(fromPosition)/(rangeDistance)*100}%,
-      ${rangeColor} ${((fromPosition)/(rangeDistance))*100}%,
-      ${rangeColor} ${(toPosition)/(rangeDistance)*100}%,
-      ${sliderColor} ${(toPosition)/(rangeDistance)*100}%,
-      ${sliderColor} 100%)`;
-        }
-
-        function setToggleAccessible(currentTarget) {
-            const toSlider = document.querySelector('#toSlider');
-            if (Number(currentTarget.value) <= 0) {
-                toSlider.style.zIndex = 2;
-            } else {
-                toSlider.style.zIndex = 0;
-            }
-        }
-
-        const fromSlider = document.querySelector('#fromSlider');
-        const toSlider = document.querySelector('#toSlider');
-        const fromInput = document.querySelector('#fromInput');
-        const toInput = document.querySelector('#toInput');
-        fillSlider(fromSlider, toSlider, '#C6C6C6', '#25daa5', toSlider);
-        setToggleAccessible(toSlider);
-
-        fromSlider.oninput = () => controlFromSlider(fromSlider, toSlider, fromInput);
-        toSlider.oninput = () => controlToSlider(fromSlider, toSlider, toInput);
-        fromInput.oninput = () => controlFromInput(fromSlider, fromInput, toInput, toSlider);
-        toInput.oninput = () => controlToInput(toSlider, fromInput, toInput, toSlider);
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            foreach ($tulajdonsagok as $tulajdonsag){
-                if ($tulajdonsag->mode == 'range'){
-                    initializeSlider('{{ $tulajdonsag->tul_nev_id }}');
+        function handleChange(e) {
+            const newValue = Number(e.value);
+            const id = e.id.split("_")[1];
+            if (e.id.includes("fromSlider")) {
+                const fromInput = document.getElementById(`fromInput_${id}`);
+                fromInput.value = newValue;
+                const to = document.getElementById(`toSlider_${id}`)
+                const toValue = Number(to.value);
+                if (newValue > toValue) {
+                    console.log(e.id, newValue, toValue);
+                    if (newValue == e.max){
+                        to.value = newValue;
+                    }
+                    else {
+                        to.value = newValue + 1;
+                    }
+                document.getElementById(`toInput_${id}`).value = to.value;
                 }
             }
-        });
 
-        function initializeSlider(id) {
-            const fromSlider = document.querySelector(`#fromSlider_${id}`);
-            const toSlider = document.querySelector(`#toSlider_${id}`);
-            const fromInput = document.querySelector(`#fromInput_${id}`);
-            const toInput = document.querySelector(`#toInput_${id}`);
-
-            fillSlider(fromSlider, toSlider, '#C6C6C6', '#25daa5', toSlider);
-            setToggleAccessible(toSlider);
-
-            fromSlider.oninput = () => controlFromSlider(fromSlider, toSlider, fromInput);
-            toSlider.oninput = () => controlToSlider(fromSlider, toSlider, toInput);
-            fromInput.oninput = () => controlFromInput(fromSlider, fromInput, toInput, toSlider);
-            toInput.oninput = () => controlToInput(toSlider, fromInput, toInput, toSlider);
+            else if (e.id.includes("toSlider")) {
+                const toInput = document.getElementById(`toInput_${id}`);
+                toInput.value = newValue;
+                const from = document.getElementById(`fromSlider_${id}`);
+                const fromValue = Number(from.value);
+                if (newValue < fromValue) {
+                    console.log(e.id, newValue, fromValue);
+                    if (newValue == e.min) {
+                        from.value = newValue;
+                    }
+                    else {
+                        from.value = newValue - 1;
+                    }
+                document.getElementById(`fromInput_${id}`).value = from.value;
+                }
+            }
+        document.getElementById("filter_form").submit();
         }
 
-        // ... rest of your existing JavaScript functions ...
     </script>
 @endsection

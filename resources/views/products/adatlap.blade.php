@@ -28,6 +28,19 @@
                     </button>
                 @endif
             </div>
+
+            <!-- Product Description -->
+            <div class="mb-4 mt-4">
+                <h5>Termék leírása:</h5>
+                <table class="table table-bordered table-striped">
+                    @foreach ($tulajdonsagok as $tul)
+                        <tr>
+                            <th>{{ $tul->tul_nev }}:</th>
+                            <td>{{$tul->tul_ertek}}</td>
+                        </tr>
+                    @endforeach
+                </table>
+            </div>
         </div>
 
         <!-- Product Details -->
@@ -50,7 +63,7 @@
                 @endif
             </div>
 
-            
+
 
             @if($termek->keszlet > 0)
                 <form action="/add" method="POST" class="mb-4">
@@ -65,18 +78,7 @@
                 </form>
             @endif
 
-            <!-- Product Description -->
-            <div class="mb-4">
-                <h5>Termék leírása:</h5>
-                <table class="table table-bordered table-striped">
-                    @foreach ($tulajdonsagok as $tul)
-                        <tr>
-                            <th>{{ $tul->tul_nev }}:</th>
-                            <td>{{$tul->tul_ertek}}</td>
-                        </tr>
-                    @endforeach
-                </table>
-            </div>
+
 
             <!-- Reviews Section -->
             <div class="mt-5">
