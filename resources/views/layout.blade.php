@@ -49,11 +49,11 @@
                             @else
                                 <a href="/profil" class="btn btn-primary"><i class="fa-solid fa-user"></i></a>
                                 <a class="btn btn-primary" href="/logout"><i class="fa-solid fa-right-to-bracket"></i></a>
-                                <a href="/kosar" role="button" class="btn btn-primary mx-2" id="mobilKosar"><i class="fa-solid fa-cart-shopping"></i></a>
+                                <a href="/cart" role="button" class="btn btn-primary mx-2" id="mobilKosar"><i class="fa-solid fa-cart-shopping"></i></a>
                             @endif
                         @else
                             <a class="btn btn-primary" data-bs-target="#loginModal" data-bs-toggle="modal" id="mobilProfil"><i class="fa-solid fa-user"></i></a>
-                            <a href="/kosar" role="button" class="btn btn-primary mx-2" id="mobilKosar"><i class="fa-solid fa-cart-shopping"></i></a>
+                            <a href="/cart" role="button" class="btn btn-primary mx-2" id="mobilKosar"><i class="fa-solid fa-cart-shopping"></i></a>
                         @endauth
                     </div>
                     <form method="POST" action="" class="d-flex px-2">
@@ -190,12 +190,12 @@
                             @else
                                 <a href="/profil" class="btn btn-primary"><i class="fa-solid fa-user"></i></a>
                                 <a class="btn btn-primary" href="/logout"><i class="fa-solid fa-right-to-bracket"></i></a>
-                                <a href="/kosar" role="button" class="btn btn-primary mx-2" id="mobilKosar"><i class="fa-solid fa-cart-shopping"></i></a>
+                                <a href="/cart" role="button" class="btn btn-primary mx-2" id="mobilKosar"><i class="fa-solid fa-cart-shopping"></i></a>
 
                             @endif
                         @else
                             <a class="btn btn-primary" data-bs-target="#loginModal" data-bs-toggle="modal" id="mobilProfil"><i class="fa-solid fa-user"></i></a>
-                            <a href="/kosar" role="button" class="btn btn-primary mx-2" id="mobilKosar"><i class="fa-solid fa-cart-shopping"></i></a>
+                            <a href="/cart" role="button" class="btn btn-primary mx-2" id="mobilKosar"><i class="fa-solid fa-cart-shopping"></i></a>
 
                         @endauth
                     </div>

@@ -52,7 +52,7 @@
 
     input[type="number"] {
         color: #8a8383;
-        width: 50px;
+        width: 100px;
         height: 30px;
         font-size: 20px;
         border: none;
@@ -196,7 +196,7 @@
                                     <div class="col-md-8">
                                         <h5>{{ $product->termek_nev }}</h5>
                                         <p class="text-danger fw-bold">
-                                            {{ number_format($product->netto * 1.27, 0, ',', ' ') }} Ft</p>
+                                            {{ number_format($product->netto * $product->afa, 0, ',', ' ') }} Ft</p>
                                         <p>{{ Str::limit($product->leiras, 100) }}</p>
                                         <a href="/products/{{ $product->cikkszam }}" class="btn btn-primary">Részletek</a>
                                         <!-- Add to cart button could go here -->

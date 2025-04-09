@@ -147,6 +147,10 @@ class WebshopController extends Controller
         // Start building the product query
         $query = termek::query()
                         ->join('image', 'image.cikkszam', '=', 'termek.cikkszam')
+                        ->join('kategoria', 'termek.kat_id', 'kategoria.kat_id')
+                        ->join('kat_tul', 'kat_tul.kat_id', 'kategoria.kat_id')
+                        ->join('tulajdonsag', 'kat_tul.tul_nev_id', 'tulajdonsag.tul_nev_id')
+                        ->join('termek_tul', 'termek_tul.kat_tul_id', 'kat_tul.kat_tul_id')
                         ->where('termek.kat_id', $category);
 
         // Filter by manufacturer if selected
@@ -173,11 +177,16 @@ class WebshopController extends Controller
         $termek = termek::where('cikkszam', $cikkszam)->first();
         $images = image::where('cikkszam', $cikkszam)->get();
         $reviews = review::where('cikkszam', $cikkszam)->get();
+        $tulajdonsagok = tulajdonsag::where('termek_tul.cikkszam', $cikkszam)
+                            ->join('kat_tul', 'kat_tul.tul_nev_id', 'tulajdonsag.tul_nev_id')
+                            ->join('termek_tul', 'kat_tul.kat_tul_id', 'termek_tul.kat_tul_id')
+                            ->get();
 
         return view('products.adatlap', [
             'termek' => $termek,
             'images' => $images,
-            'reviews' => $reviews
+            'reviews' => $reviews,
+            'tulajdonsagok' => $tulajdonsagok
         ]);
     }
     public function addReview(Request $req, $cikkszam)
@@ -257,13 +266,6 @@ class WebshopController extends Controller
         return redirect("/profil");
     }
 
-    public function mind(){
-        return view('mind',[
-            'result' => termek::select('*')
-                    ->get()
-                ]);
-            }
-
             public function profil(){
                 return view('profil',[
                     'nevek' => termek::select('*')
@@ -328,7 +330,7 @@ class WebshopController extends Controller
         $total = 0;
         if(!session('cart') == null){
             foreach(session('cart') as $row){
-                $total = $total + $row['ar']*$row['db'];
+                $total = $total + $row['netto']*$row['afa']*$row['db'];
             }
         }
         return view('cart', [

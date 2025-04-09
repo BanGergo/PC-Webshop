@@ -50,16 +50,13 @@
                 @endif
             </div>
 
-            <div class="mb-4">
-                <h5>Garancia:</h5>
-                <p>{{ $termek->garancia }} hónap</p>
-            </div>
+            
 
             @if($termek->keszlet > 0)
                 <form action="/add" method="POST" class="mb-4">
                     @csrf
                     <input type="hidden" name="cikkszam" value="{{ $termek->cikkszam }}">
-                    <div class="input-group">
+                    <div class="input-group w-50">
                         <input type="number" name="quantity" class="form-control" value="1" min="1" max="{{ $termek->keszlet }}">
                         <button type="submit" class="btn btn-primary" value="{{ $termek->cikkszam }}" name="cikkszam">
                             <i class="fas fa-cart-plus"></i> Kosárba
@@ -71,7 +68,14 @@
             <!-- Product Description -->
             <div class="mb-4">
                 <h5>Termék leírása:</h5>
-                <p>{{ $termek->leiras }}</p>
+                <table class="table table-bordered table-striped">
+                    @foreach ($tulajdonsagok as $tul)
+                        <tr>
+                            <th>{{ $tul->tul_nev }}:</th>
+                            <td>{{$tul->tul_ertek}}</td>
+                        </tr>
+                    @endforeach
+                </table>
             </div>
 
             <!-- Reviews Section -->
