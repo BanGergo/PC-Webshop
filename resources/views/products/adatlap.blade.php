@@ -58,10 +58,10 @@
             @if($termek->keszlet > 0)
                 <form action="/add" method="POST" class="mb-4">
                     @csrf
-                    <input type="hidden" name="termek_id" value="{{ $termek->cikkszam }}">
+                    <input type="hidden" name="cikkszam" value="{{ $termek->cikkszam }}">
                     <div class="input-group">
                         <input type="number" name="quantity" class="form-control" value="1" min="1" max="{{ $termek->keszlet }}">
-                        <button type="submit" class="btn btn-primary" value="{{ $termek->cikkszam }}">
+                        <button type="submit" class="btn btn-primary" value="{{ $termek->cikkszam }}" name="cikkszam">
                             <i class="fas fa-cart-plus"></i> Kosárba
                         </button>
                     </div>

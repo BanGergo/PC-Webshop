@@ -107,16 +107,42 @@ class WebshopController extends Controller
                         ->where('termek.kat_id', $category)
                         ->get();
 
-        $tulajdonsagok = tulajdonsag::select('tulajdonsag.tul_nev')
+        $tulajdonsagok = tulajdonsag::select('tulajdonsag.tul_nev', 'tulajdonsag.tul_nev_id', 'kat_tul.kat_tul_id', 'filter_options.mode')
                         ->distinct()
-                        ->join('termek', 'termek.cikkszam', 'tulajdonsag.cikkszam')
-                        ->where('termek.kat_id', $category)
+                        ->join('kat_tul', 'kat_tul.tul_nev_id', 'tulajdonsag.tul_nev_id')
+                        ->join('filter_options', 'filter_options.tul_nev_id', 'tulajdonsag.tul_nev_id')
+                        ->where('kat_tul.kat_id', $category)
+                        ->whereNotNull('filter_options.mode')
                         ->get();
 
-        $tulajdonsagok_ertek = tulajdonsag::select('tulajdonsag.tulajdonsag', 'tulajdonsag.tul_nev_id')
-                                ->join('termek', 'termek.cikkszam', 'tulajdonsag.cikkszam')
-                                ->where('termek.kat_id', $category)
-                                ->get();
+        $tul_ertek_min = termek_tul::selectRaw("MIN(CAST(termek_tul.tul_ertek AS DECIMAL)) as min_value, kat_tul.tul_nev_id")
+                                    ->join('kat_tul', 'kat_tul.kat_tul_id', 'termek_tul.kat_tul_id')
+                                    ->join('tulajdonsag', 'kat_tul.tul_nev_id', 'tulajdonsag.tul_nev_id')
+                                    ->join('filter_options', 'filter_options.tul_nev_id', 'tulajdonsag.tul_nev_id')
+                                    ->where('filter_options.mode', 'range')
+                                    ->whereNotNull('filter_options.mode')
+                                    ->groupBy('kat_tul.tul_nev_id')
+                                    ->get()
+                                    ->pluck('min_value', 'tul_nev_id')
+                                    ->toArray();
+
+        $tul_ertek_max = termek_tul::selectRaw("MAX(CAST(termek_tul.tul_ertek AS DECIMAL)) as max_value, kat_tul.tul_nev_id")
+                                    ->join('kat_tul', 'kat_tul.kat_tul_id', 'termek_tul.kat_tul_id')
+                                    ->join('tulajdonsag', 'kat_tul.tul_nev_id', 'tulajdonsag.tul_nev_id')
+                                    ->join('filter_options', 'filter_options.tul_nev_id', 'tulajdonsag.tul_nev_id')
+                                    ->where('filter_options.mode', 'range')
+                                    ->whereNotNull('filter_options.mode')
+                                    ->groupBy('kat_tul.tul_nev_id')
+                                    ->get()
+                                    ->pluck('max_value', 'tul_nev_id')
+                                    ->toArray();
+
+        $tulajdonsagok_ertek = termek_tul::select('termek_tul.tul_ertek', 'kat_tul.kat_tul_id')
+                        ->distinct()
+                        ->join('kat_tul', 'kat_tul.kat_tul_id', 'termek_tul.kat_tul_id')
+                        ->join('tulajdonsag', 'tulajdonsag.tul_nev_id', 'kat_tul.tul_nev_id')
+                        ->where('kat_tul.kat_id', $category)
+                        ->get();
 
         // Start building the product query
         $query = termek::query()
@@ -139,7 +165,7 @@ class WebshopController extends Controller
 
         $products = $query->get();
 
-        return view('products.filtered', compact('gyartok', 'products', 'selectedCategory', 'request', 'tulajdonsagok', 'tulajdonsagok_ertek'));
+        return view('products.filtered', compact('gyartok', 'products', 'selectedCategory', 'request', 'tulajdonsagok', 'tulajdonsagok_ertek', 'tul_ertek_min', 'tul_ertek_max'));
     }
 
     public function adatlap($cikkszam)
@@ -356,13 +382,14 @@ class WebshopController extends Controller
         ##dd($req);
         $termek  = termek::find($req->cikkszam);
         $cart = session()->get('cart');
-        if(isset($cart[$termek->termekek_id])){
-            $cart[$termek->termekek_id]['db'] = $cart[$termek->termekek_id]['db']+1;
+        if(isset($cart[$termek->cikkszam])){
+            $cart[$termek->cikkszam]['db'] = $cart[$termek->cikkszam]['db']+1;
         } else {
-            $cart[$termek->termekek_id] = [
-                'cikkszam' => $termek->termekek_id,
-                'nev'       => $termek->nev,
-                'ar'        => $termek->ar,
+            $cart[$termek->cikkszam] = [
+                'cikkszam' => $termek->cikkszam,
+                'nev'       => $termek->termek_nev,
+                'netto'        => $termek->netto,
+                'afa'        => $termek->afa,
                 'db'        => 1
             ];
         }
@@ -370,7 +397,7 @@ class WebshopController extends Controller
         session()->put('cart',$cart);
         ##dd($cart);
         return view('add', [
-            'termekek_id'   => $req->cikkszam
+            'cikkszam'   => $req->cikkszam
         ]);
     }
 

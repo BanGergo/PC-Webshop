@@ -304,11 +304,11 @@
     </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            @foreach ($tulajdonsagok as $tulajdonsag)
-                @if ($tulajdonsag->mode == 'range')
+            foreach ($tulajdonsagok as $tulajdonsag){
+                if ($tulajdonsag->mode == 'range'){
                     initializeSlider('{{ $tulajdonsag->tul_nev_id }}');
-                @endif
-            @endforeach
+                }
+            }
         });
 
         function initializeSlider(id) {
