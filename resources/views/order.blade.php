@@ -7,7 +7,7 @@
                 @foreach ($order as $row)
                     <div class="row">
                         <div class="col-8"><b>{{ $row['nev'] }} - {{ $row['db']}} darab</b></div>
-                        <div class="col-4 text-end"><b>{{ number_format($row['ar']*$row['db'],0,',',' ') }} Ft</b></div>
+                        <div class="col-4 text-end"><b>{{ number_format($row['netto']*$row['afa']*$row['db'],0,',',' ') }} Ft</b></div>
                     </div>
                 @endforeach
                 <hr>

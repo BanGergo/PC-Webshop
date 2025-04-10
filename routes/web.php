@@ -17,10 +17,13 @@ Route::get("/logout", [UserController::class, 'logout']);
 
 Route::get('/profil', [WebshopController::class, 'profil']);
 Route::post("/profil", [WebshopController::class, 'termekadddata']);
+Route::post('/passMod', [UserController::class, 'passMod']);
 
 Route::post('/add', [WebshopController::class, 'Add']);
 Route::get('/cart', [WebshopController::class, 'Cart']);
 Route::post('/cart', [WebshopController::class, 'CartData']);
+Route::get('/delivery', [WebshopController::class, 'Delivery']);
+Route::post('/delivery', [WebshopController::class, 'DeliveryData']);
 Route::get('/order', [WebshopController::class, 'Order']);
 
 Route::get('/products', [WebshopController::class, 'index'])->name('products.index');

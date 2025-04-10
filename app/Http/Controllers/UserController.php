@@ -70,22 +70,22 @@ class UserController extends Controller
         }
     }
 
-    public function modData(Request $req){
+    public function passMod(Request $req){
         $req->validate([
-            'opassword'                  => 'required',
-            'npassword'                  => ['required', 'confirmed', Password::min(8)->numbers()->letters()->mixedCase()],
-            'npassword_confirmation'     => 'required',
+            'old_pass'                  => 'required',
+            'new_pass'                  => ['required', 'confirmed', Password::min(8)->numbers()->letters()->mixedCase()],
+            'new_pass_confirmation'     => 'required',
         ],[
-            'opassword.required'         => 'Kötelező megadni',
-            'npassword.required'         => 'Kötelező megadni!',
-            'npassword.confirmed'        => 'Nem egyezik meg a két jelszó!',
-            'npassword.min'              => 'A jelszó legalább 8 karakter legyen!',
-            'npassword_confirmation.required' => 'Kötelező megadni!'
+            'old_pass.required'         => 'Kötelező megadni',
+            'new_pass.required'         => 'Kötelező megadni!',
+            'new_pass.confirmed'        => 'Nem egyezik meg a két jelszó!',
+            'new_pass.min'              => 'A jelszó legalább 8 karakter legyen!',
+            'new_pass_confirmation.required' => 'Kötelező megadni!'
         ]);
 
-        if(Hash::check($req->opassword, Auth::user()->password)){
-            $data           = User::find(Auth::user()->users_id);
-            $data->password = Hash::make($req->npassword);
+        if(Hash::check($req->old_pass, Auth::user()->password)){
+            $data           = User::find(Auth::user()->user_id);
+            $data->password = Hash::make($req->new_pass);
             $data->Save();
             return redirect('/')->withErrors(['sv' => 'Sikeres jelszó módosítás!']);
         } else {

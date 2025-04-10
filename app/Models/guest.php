@@ -8,4 +8,5 @@ class guest extends Model
 {
     protected $table = 'guest';
     public $primaryKey = 'guest_id';
+    public $timestamps = false;
 }

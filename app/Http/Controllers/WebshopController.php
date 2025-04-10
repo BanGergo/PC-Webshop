@@ -293,12 +293,77 @@ class WebshopController extends Controller
         return redirect('/cart');
     }
 
+    public function Delivery()
+    {
+        return view('delivery');
+    }
+
+    public function DeliveryData(Request $req)
+    {
+        if (Auth::check())
+        {
+            $req->validate([
+                'user_telefon'      => 'required',
+                'user_irszam'       => 'required|max:4|min:4',
+                'user_varos'        => 'required',
+                'user_uha'          => 'required',
+            ],[
+                'user_telefon.required'     => 'Adja meg a telefonszámát!',
+                'user_irszam.required'      => 'Adja meg az irányítószámot!',
+                'user_irszam.max'           => 'Az irányítószámnak 4 jegyűnek kell lennie!',
+                'user_irszanmin'            => 'Az irányítószámnak 4 jegyűnek kell lennie!',
+                'user_varos'                => 'Adja meg a várost!',
+                'user_uha'                  => 'Adja meg az utcát és a házszámot!'
+            ]);
+
+            $data           = User::find(Auth::user()->user_id);
+            $data->telefon  = $req->user_telefon;
+            $data->irszam   = $req->user_irszam;
+            $data->varos    = $req->user_varos;
+            $data->uha      = $req->user_uha;
+            $data->megj     = $req->user_megj;
+            $data->Save();
+        }
+        else
+        {
+            $req->validate([
+                'guest_nev'         => 'required',
+                'guest_email'       => 'required|email|unique:guest,email',
+                'guest_telefon'      => 'required',
+                'guest_irszam'       => 'required|max:4|min:4',
+                'guest_varos'        => 'required',
+                'guest_uha'          => 'required',
+            ],[
+                'guest_nev.required'        => 'Adja meg a nevét!',
+                'guest_email.required'      => 'Adja meg az email címét!',
+                'guest_email.unique'        => 'Ez az email már létezik!',
+                'guest_telefon.required'     => 'Adja meg a telefonszámát!',
+                'guest_irszam.required'      => 'Adja meg az irányítószámot!',
+                'guest_irszam.max'           => 'Az irányítószámnak 4 jegyűnek kell lennie!',
+                'guest_irszanmin'            => 'Az irányítószámnak 4 jegyűnek kell lennie!',
+                'guest_varos'                => 'Adja meg a várost!',
+                'guest_uha'                  => 'Adja meg az utcát és a házszámot!'
+            ]);
+
+            $data           = new guest;
+            $data->nev      = $req->guest_nev;
+            $data->email    = $req->guest_email;
+            $data->telefon  = $req->guest_telefon;
+            $data->irszam   = $req->guest_irszam;
+            $data->varos    = $req->guest_varos;
+            $data->uha      = $req->guest_uha;
+            $data->megj     = $req->guest_megj;
+            $data->Save();
+        }
+        return redirect('/order')->withErrors(['sv' => 'Sikeres rendelés leadás!']);
+    }
+
     public function Order(){
         $total = 0;
         if(!session('cart') == null){
             $order = session()->get('cart');
             foreach($order as $row){
-                $total = $total + $row['ar']*$row['db'];
+                $total = $total + $row['netto']*$row['afa']*$row['db'];
             }
         }
         session()->flush('cart');

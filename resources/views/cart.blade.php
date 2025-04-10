@@ -36,7 +36,7 @@
                         <p class="fs-4"><b>Összesen: {{ number_format($total,0,',',' ') }} Ft</b></p>
                     </div>
                     <div class="col-md text-end">
-                        <a class="btn btn-dark" href="/order">Megrendelem</a>
+                        <a class="btn btn-dark" href="/delivery">Adatok megadása</a>
                     </div>
                 </div>
                 @else
