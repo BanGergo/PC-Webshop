@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2025. Ápr 09. 13:20
+-- Létrehozás ideje: 2025. Ápr 10. 13:25
 -- Kiszolgáló verziója: 10.4.32-MariaDB
 -- PHP verzió: 8.2.12
 
@@ -168,8 +168,15 @@ CREATE TABLE `guest` (
   `irszam` varchar(255) NOT NULL,
   `varos` varchar(255) NOT NULL,
   `uha` varchar(255) NOT NULL,
-  `megj` text NOT NULL
+  `megj` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- A tábla adatainak kiíratása `guest`
+--
+
+INSERT INTO `guest` (`guest_id`, `nev`, `email`, `telefon`, `irszam`, `varos`, `uha`, `megj`) VALUES
+(4, 'Gizike néni', 'gizike@gizi.hu', 2147483647, '1000', 'Minta', 'Minta utca 18', NULL);
 
 -- --------------------------------------------------------
 
@@ -222,7 +229,7 @@ INSERT INTO `gyarto` (`gyarto_id`, `gyarto_nev`) VALUES
 CREATE TABLE `image` (
   `img_id` int(11) NOT NULL,
   `cikkszam` int(11) NOT NULL,
-  `url` varchar(255) NOT NULL
+  `url` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1431,6 +1438,7 @@ CREATE TABLE `user` (
   `username` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
+  `telefon` int(11) DEFAULT NULL,
   `irszam` varchar(255) DEFAULT NULL,
   `varos` varchar(255) DEFAULT NULL,
   `uha` varchar(255) DEFAULT NULL,
@@ -1439,6 +1447,14 @@ CREATE TABLE `user` (
   `updated_at` date DEFAULT NULL,
   `status` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- A tábla adatainak kiíratása `user`
+--
+
+INSERT INTO `user` (`user_id`, `username`, `email`, `password`, `telefon`, `irszam`, `varos`, `uha`, `megj`, `created_at`, `updated_at`, `status`) VALUES
+(1, 'Test', 'test@gmail.com', '$2y$12$waFJVJPzR8T5WVFtU7aWOe/VVnsdXEbfZZJ8i.eXo13wqPAgywIOe', 2147483647, '2120', 'Dunakeszi', 'Fóti út 101', NULL, '2025-04-10', '2025-04-10', 1),
+(2, 'Gizi néni', 'gizi@gizi.hu', '$2y$12$m4vhZEzJkMXbwfD8Y9EA.u3ZOPuH1dj7y0zUIja1NGH/vvdsbQ.XG', NULL, NULL, NULL, NULL, NULL, '2025-04-10', '2025-04-10', 1);
 
 --
 -- Indexek a kiírt táblákhoz
@@ -1564,7 +1580,7 @@ ALTER TABLE `billing`
 -- AUTO_INCREMENT a táblához `guest`
 --
 ALTER TABLE `guest`
-  MODIFY `guest_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `guest_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT a táblához `gyarto`
@@ -1630,7 +1646,7 @@ ALTER TABLE `tulajdonsag`
 -- AUTO_INCREMENT a táblához `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Megkötések a kiírt táblákhoz
