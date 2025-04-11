@@ -1,26 +1,3 @@
-<style>
-    html {
-        text-align: center;
-    }
-
-    #tadd {
-        max-width: 400px;
-        width: 400px;
-        height: auto;
-        border: 2px solid black;
-        border-radius: 25px;
-        margin: auto;
-    }
-
-    #cancel {
-        float: right;
-        text-decoration: none;
-    }
-
-    label {
-        float: left;
-    }
-</style>
 @extends('layout')
 @section('content')
     <div class="mx-auto my-2 col-md-8">
@@ -32,7 +9,7 @@
             <div class="row">
                 <div class="col-md">
                     <h1 class="text-center py-3">{{ Auth::user()->username }} profilja</h1>
-                    <p class="text-start">Felhasználónév: {{ Auth::user()->nev }}</p>
+                    <p class="text-start">Felhasználónév: {{ Auth::user()->username }}</p>
                     <p class="text-start">E-mail cím: {{ Auth::user()->email }}</p>
                     <p class="text-start">Tag már: {{ date_format(date_create(Auth::user()->created_at), 'Y. m. d.') }} óta!
                     </p>
@@ -81,6 +58,11 @@
                                 </div>
                             </div>
                         </div>
+                    <div>
+                        <table class="table table-bordered table-striped">
+                            
+                        </table>
+                    </div>
                 </div>
             </div>
     </div>

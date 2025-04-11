@@ -89,3 +89,11 @@ nav #desktopKosar {
 .card-body a {
     color: black;
 }
+
+@media screen and (min-width: 576px) {
+    #mainPageCard {
+        width: 18rem;
+    }
+
+}
+

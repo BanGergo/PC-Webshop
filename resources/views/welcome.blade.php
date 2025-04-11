@@ -36,7 +36,7 @@
         <div class="container px-5" id="kategoriak">
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 py-3">
                 @foreach ($result as $row)
-                    <div class="card mx-1 my-2">
+                    <div class="card mx-1 my-2" id="mainPageCard">
                         <a href="{{ url('/products/category/'.$row->kat_id) }}"><img src="{{asset('assets/img/kategoriak/'. $row->kat_id. '.jpg')}}" class="card-img-top" alt="{{$row->kat_nev}}"></a>
                         <div class="card-body d-flex align-items-end flex-column mb-3">
                         <h5 class="card-title mt-auto mx-auto p-2"><a href="">{{$row->kat_nev}}</a></h5>

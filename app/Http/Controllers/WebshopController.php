@@ -366,6 +366,7 @@ class WebshopController extends Controller
                 $total = $total + $row['netto']*$row['afa']*$row['db'];
             }
         }
+        $data = new rendeles_tetel;
         session()->flush('cart');
         ## $order adatbázisba írása
         if($total == 0){
