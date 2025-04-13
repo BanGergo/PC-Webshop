@@ -177,17 +177,18 @@ class WebshopController extends Controller
                             ->where("termek_tul_$key.tul_ertek", '=', $value);
                 }
 
-                // else if (str_starts_with($key, 'min_')) {
-                //     $baseKey = preg_replace('/^(min_)/', '', $key);
-                //     $max = request()->get("max_$baseKey");
-                //     $query->join("kat_tul AS kat_tul_$key", 'kategoria.kat_id', '=', "kat_tul_$key.kat_id")
-                //             ->join("tulajdonsag AS tul_$key", "tul_$key.tul_nev_id", '=', "kat_tul_$key.tul_nev_id")
-                //             ->join("termek_tul AS termek_tul_$key", function($join) use ($key) {
-                //                 $join->on("termek_tul_$key.kat_tul_id", '=', "kat_tul_$key.kat_tul_id")
-                //                         ->on("termek_tul_$key.cikkszam", '=', 'termek.cikkszam');
-                //             })
-                //             ->whereBetween("termek_tul_$key.tul_ertek", array($value, $max));
-                // }
+                else if (str_starts_with($key, 'min_')) {
+                    $baseKey = preg_replace('/^(min_)/', '', $key);
+                    $max = request()->get("max_$baseKey");
+                    $query->join("kat_tul AS kat_tul_$key", 'kategoria.kat_id', '=', "kat_tul_$key.kat_id")
+                            ->join("tulajdonsag AS tul_$key", "tul_$key.tul_nev_id", '=', "kat_tul_$key.tul_nev_id")
+                            ->join("termek_tul AS termek_tul_$key", function($join) use ($key) {
+                                $join->on("termek_tul_$key.kat_tul_id", '=', "kat_tul_$key.kat_tul_id")
+                                        ->on("termek_tul_$key.cikkszam", '=', 'termek.cikkszam');
+                            })
+                            ->where('termek.kat_id', $category)
+                            ->whereBetween("termek_tul_$key.tul_ertek", array($value, $max));
+                }
             }
         }
 
@@ -366,7 +367,51 @@ class WebshopController extends Controller
                 $total = $total + $row['netto']*$row['afa']*$row['db'];
             }
         }
-        $data = new rendeles_tetel;
+        $billingData = new billing;
+        $billingData->billingdate = date('Y-m-d H:i:s');
+        $billingData->paymentstatus = "kifizetendő";
+        $billingData->deliverystatus = "kiszállítandó";
+        $billingData->Save();
+
+        if (Auth::check())
+        {
+            $torzsData = new rendeles_torzs;
+            $torzsData->user_id = Auth::user()->user_id;
+            $torzsData->billing_id = billing::max('billing_id');
+            $torzsData->ossz = $total;
+            $torzsData->paymentmethod = "utánvétel";
+            $torzsData->Save();
+
+            foreach ($order as $row)
+            {
+                $tetelData = new rendeles_tetel;
+                $tetelData->rendt_id = rendeles_torzs::max('rendt_id');
+                $tetelData->cikkszam = $row['cikkszam'];
+                $tetelData->menny = $row['db'];
+                $tetelData->netto = $row['netto'];
+                $tetelData->Save();
+            }
+        }
+        else
+        {
+            $torzsData = new rendeles_torzs;
+            $torzsData->guest_id = guest::max('guest_id');
+            $torzsData->billing_id = billing::max('billing_id');
+            $torzsData->ossz = $total;
+            $torzsData->paymentmethod = "utánvétel";
+            $torzsData->Save();
+
+            foreach ($order as $row)
+            {
+                $tetelData = new rendeles_tetel;
+                $tetelData->rendt_id = rendeles_torzs::max('rendt_id');
+                $tetelData->cikkszam = $row['cikkszam'];
+                $tetelData->menny = $row['db'];
+                $tetelData->netto = $row['netto'];
+                $tetelData->Save();
+            }
+        }
+
         session()->flush('cart');
         ## $order adatbázisba írása
         if($total == 0){
@@ -381,6 +426,9 @@ class WebshopController extends Controller
     public function Add(Request $req){
         ##dd($req);
         $termek  = termek::find($req->cikkszam);
+        $image = image::select('image.url')
+                        ->where('image.cikkszam', $req->cikkszam)
+                        ->first();
         $cart = session()->get('cart');
         if(isset($cart[$termek->cikkszam])){
             $cart[$termek->cikkszam]['db'] = $cart[$termek->cikkszam]['db']+1;
@@ -390,6 +438,7 @@ class WebshopController extends Controller
                 'nev'       => $termek->termek_nev,
                 'netto'        => $termek->netto,
                 'afa'        => $termek->afa,
+                'url'       => $image->url,
                 'db'        => 1
             ];
         }

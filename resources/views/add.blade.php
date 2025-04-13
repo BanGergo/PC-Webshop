@@ -4,7 +4,7 @@
     <div class="d-flex justify-content-center">
         <div class="w-50 border border-dark rounded p-2 row">
             <div class="col-md-5">
-                <img src="" alt="" class="w-100">
+                <img src="{{ session('cart')[$cikkszam]['url'] }}" alt="" class="w-100">
             </div>
             <div class="col-md-7 text-center">
                 <h5>Sikeresen a kosárba raktad!</h5>

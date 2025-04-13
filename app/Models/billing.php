@@ -8,4 +8,5 @@ class billing extends Model
 {
     protected $table = 'billing';
     public $primaryKey = 'billing_id';
+    public $timestamps = false;
 }

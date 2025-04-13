@@ -9,9 +9,15 @@
                     @foreach (session('cart') as $row)
                         <div class="row">
                             <div class="col-md">
-                                <h5>{{ $row['nev'] }}</h5>
-                                <p>{{ $row['db'] }} darab - {{ number_format($row['netto']*$row['afa']*$row['db'],0,',',' ') }} Ft</p>
-                                <img src="" alt="{{$row['cikkszam']}}.jpg" class="w-100">
+                                <div class="row">
+                                    <div class="col-md">
+                                        <img src="{{$row['url']}}" alt="{{$row['cikkszam']}}.jpg" class="w-100 img-fluid">
+                                    </div>
+                                    <div class="col-md">
+                                        <h5>{{ $row['nev'] }}</h5>
+                                        <p>{{ $row['db'] }} darab - {{ number_format($row['netto']*$row['afa']*$row['db'],0,',',' ') }} Ft</p>
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-md">
                                 <div class="d-flex justify-content-end">
