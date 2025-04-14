@@ -85,104 +85,114 @@
         <hr class="mx-auto w-50">
         <div class="row">
             <div class="col-md-4">
-                <div class="card">
-                    <div class="card-header">
-                        <h5>Szűrők</h5>
-                    </div>
-                    <div class="card-body">
-                        <form action="{{ route('products.filter') }}" method="get" id="filter_form">
-                            <!-- Hidden input to keep track of category -->
-                            <input type="hidden" name="category" value="{{ $selectedCategory->kat_id }}">
+                <div class="accordion py-3" id="accordionExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                Szűrők
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <form action="{{ route('products.filter') }}" method="get" id="filter_form">
+                                            <!-- Hidden input to keep track of category -->
+                                            <input type="hidden" name="category" value="{{ $selectedCategory->kat_id }}">
 
-                            <!-- Manufacturer filter -->
-                            <div class="mb-3">
-                                <label for="gyarto" class="form-label">Gyártók</label>
-                                <select name="gyarto" id="gyarto" class="form-select" onchange="this.form.submit()">
-                                    <option value="">Összes</option>
-                                    @foreach ($gyartok as $gyarto)
-                                        <option value="{{ $gyarto->gyarto_id }}"
-                                            {{ isset($request) && $request->gyarto == $gyarto->gyarto_id ? 'selected' : '' }}>
-                                            {{ $gyarto->gyarto_nev }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <div class="mb-3">
-                                @foreach ($tulajdonsagok as $tulajdonsag)
-                                    <label for="{{ $tulajdonsag->tul_nev_id }}">{{ $tulajdonsag->tul_nev }}</label>
-                                    @if ($tulajdonsag->mode == 'exact')
-                                        <select name="tulajdonsag_{{ $tulajdonsag->tul_nev_id }}" id="tulajdonsag" class="form-select"
-                                            onchange="this.form.submit()">
-                                            <option value="">Összes</option>
-                                            @foreach ($tulajdonsagok_ertek as $ertek)
-                                                @if ($ertek->kat_tul_id == $tulajdonsag->kat_tul_id)
-                                                    <option value="{{ $ertek->tul_ertek }}"
-                                                        {{ isset($request) && request()->get("tulajdonsag_$tulajdonsag->tul_nev_id") == $ertek->tul_ertek ? 'selected' : '' }}>
-                                                        {{ $ertek->tul_ertek }}
-                                                    </option>
-                                                @endif
-                                            @endforeach
-                                        </select>
-                                    @else
-                                        <div class="range_container">
-                                            <div class="sliders_control">
-                                                <input id="fromSlider_{{ $tulajdonsag->tul_nev_id }}" type="range"
-                                                    value="{{ isset($request) && request()->get("min_$tulajdonsag->tul_nev_id") != null ? request()->get("min_$tulajdonsag->tul_nev_id") : $tul_ertek_min[$tulajdonsag->tul_nev_id] }}"
-                                                    min="{{ $tul_ertek_min[$tulajdonsag->tul_nev_id] }}"
-                                                    max="{{ $tul_ertek_max[$tulajdonsag->tul_nev_id] }}"
-                                                    name="min_{{ $tulajdonsag->tul_nev_id }}"
-                                                    onchange="handleChange(this)"/>
-                                                <input id="toSlider_{{ $tulajdonsag->tul_nev_id }}" type="range"
-                                                    value="{{ isset($request) && request()->get("max_$tulajdonsag->tul_nev_id") != null ? request()->get("max_$tulajdonsag->tul_nev_id") : $tul_ertek_max[$tulajdonsag->tul_nev_id] }}"
-                                                    min="{{ $tul_ertek_min[$tulajdonsag->tul_nev_id] }}"
-                                                    max="{{ $tul_ertek_max[$tulajdonsag->tul_nev_id] }}"
-                                                    name="max_{{ $tulajdonsag->tul_nev_id }}"
-                                                    onchange="handleChange(this)"/>
+                                            <!-- Manufacturer filter -->
+                                            <div class="mb-3">
+                                                <label for="gyarto" class="form-label">Gyártók</label>
+                                                <select name="gyarto" id="gyarto" class="form-select" onchange="this.form.submit()">
+                                                    <option value="">Összes</option>
+                                                    @foreach ($gyartok as $gyarto)
+                                                        <option value="{{ $gyarto->gyarto_id }}"
+                                                            {{ isset($request) && $request->gyarto == $gyarto->gyarto_id ? 'selected' : '' }}>
+                                                            {{ $gyarto->gyarto_nev }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
                                             </div>
-                                            <div class="form_control">
-                                                <div class="form_control_container">
-                                                    <div class="form_control_container__time">Min</div>
-                                                    <input class="form_control_container__time__input" type="number"
-                                                        id="fromInput_{{ $tulajdonsag->tul_nev_id }}"
-                                                        value="{{ isset($request) && request()->get("min_$tulajdonsag->tul_nev_id") != null ? request()->get("min_$tulajdonsag->tul_nev_id") : $tul_ertek_min[$tulajdonsag->tul_nev_id] }}"
-                                                        min="{{ $tul_ertek_min[$tulajdonsag->tul_nev_id] }}"
-                                                        max="{{ $tul_ertek_max[$tulajdonsag->tul_nev_id] }}" />
-                                                </div>
-                                                <div class="form_control_container">
-                                                    <div class="form_control_container__time">Max</div>
-                                                    <input class="form_control_container__time__input" type="number"
-                                                        id="toInput_{{ $tulajdonsag->tul_nev_id }}"
-                                                        value="{{ isset($request) && request()->get("max_$tulajdonsag->tul_nev_id") != null ? request()->get("max_$tulajdonsag->tul_nev_id") : $tul_ertek_max[$tulajdonsag->tul_nev_id] }}"
-                                                        min="{{ $tul_ertek_min[$tulajdonsag->tul_nev_id] }}"
-                                                        max="{{ $tul_ertek_max[$tulajdonsag->tul_nev_id] }}" />
+
+                                            <div class="mb-3">
+                                                @foreach ($tulajdonsagok as $tulajdonsag)
+                                                    <label for="{{ $tulajdonsag->tul_nev_id }}">{{ $tulajdonsag->tul_nev }}</label>
+                                                    @if ($tulajdonsag->mode == 'exact')
+                                                        <select name="tulajdonsag_{{ $tulajdonsag->tul_nev_id }}" id="tulajdonsag" class="form-select"
+                                                            onchange="this.form.submit()">
+                                                            <option value="">Összes</option>
+                                                            @foreach ($tulajdonsagok_ertek as $ertek)
+                                                                @if ($ertek->kat_tul_id == $tulajdonsag->kat_tul_id)
+                                                                    <option value="{{ $ertek->tul_ertek }}"
+                                                                        {{ isset($request) && request()->get("tulajdonsag_$tulajdonsag->tul_nev_id") == $ertek->tul_ertek ? 'selected' : '' }}>
+                                                                        {{ $ertek->tul_ertek }}
+                                                                    </option>
+                                                                @endif
+                                                            @endforeach
+                                                        </select>
+                                                    @else
+                                                        <div class="range_container">
+                                                            <div class="sliders_control">
+                                                                <input id="fromSlider_{{ $tulajdonsag->tul_nev_id }}" type="range"
+                                                                    value="{{ isset($request) && request()->get("min_$tulajdonsag->tul_nev_id") != null ? request()->get("min_$tulajdonsag->tul_nev_id") : $tul_ertek_min[$tulajdonsag->tul_nev_id] }}"
+                                                                    min="{{ $tul_ertek_min[$tulajdonsag->tul_nev_id] }}"
+                                                                    max="{{ $tul_ertek_max[$tulajdonsag->tul_nev_id] }}"
+                                                                    name="min_{{ $tulajdonsag->tul_nev_id }}"
+                                                                    onchange="handleChange(this)"/>
+                                                                <input id="toSlider_{{ $tulajdonsag->tul_nev_id }}" type="range"
+                                                                    value="{{ isset($request) && request()->get("max_$tulajdonsag->tul_nev_id") != null ? request()->get("max_$tulajdonsag->tul_nev_id") : $tul_ertek_max[$tulajdonsag->tul_nev_id] }}"
+                                                                    min="{{ $tul_ertek_min[$tulajdonsag->tul_nev_id] }}"
+                                                                    max="{{ $tul_ertek_max[$tulajdonsag->tul_nev_id] }}"
+                                                                    name="max_{{ $tulajdonsag->tul_nev_id }}"
+                                                                    onchange="handleChange(this)"/>
+                                                            </div>
+                                                            <div class="form_control">
+                                                                <div class="form_control_container">
+                                                                    <div class="form_control_container__time">Min</div>
+                                                                    <input class="form_control_container__time__input" type="number"
+                                                                        id="fromInput_{{ $tulajdonsag->tul_nev_id }}"
+                                                                        value="{{ isset($request) && request()->get("min_$tulajdonsag->tul_nev_id") != null ? request()->get("min_$tulajdonsag->tul_nev_id") : $tul_ertek_min[$tulajdonsag->tul_nev_id] }}"
+                                                                        min="{{ $tul_ertek_min[$tulajdonsag->tul_nev_id] }}"
+                                                                        max="{{ $tul_ertek_max[$tulajdonsag->tul_nev_id] }}" />
+                                                                </div>
+                                                                <div class="form_control_container">
+                                                                    <div class="form_control_container__time">Max</div>
+                                                                    <input class="form_control_container__time__input" type="number"
+                                                                        id="toInput_{{ $tulajdonsag->tul_nev_id }}"
+                                                                        value="{{ isset($request) && request()->get("max_$tulajdonsag->tul_nev_id") != null ? request()->get("max_$tulajdonsag->tul_nev_id") : $tul_ertek_max[$tulajdonsag->tul_nev_id] }}"
+                                                                        min="{{ $tul_ertek_min[$tulajdonsag->tul_nev_id] }}"
+                                                                        max="{{ $tul_ertek_max[$tulajdonsag->tul_nev_id] }}" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    @endif
+                                                @endforeach
+                                            </div>
+
+                                            <!-- Price range filter -->
+                                            <div class="mb-3">
+                                                <label class="form-label">Ár tartomány</label>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <input type="number" name="min_price" class="form-control" placeholder="Min Ft"
+                                                            value="{{ isset($request) ? $request->min_price : '' }}">
+                                                    </div>
+                                                    <div class="col-1 text-center">-</div>
+                                                    <div class="col">
+                                                        <input type="number" name="max_price" class="form-control" placeholder="Max Ft"
+                                                            value="{{ isset($request) ? $request->max_price : '' }}">
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    @endif
-                                @endforeach
-                            </div>
 
-                            <!-- Price range filter -->
-                            <div class="mb-3">
-                                <label class="form-label">Ár tartomány</label>
-                                <div class="row">
-                                    <div class="col">
-                                        <input type="number" name="min_price" class="form-control" placeholder="Min Ft"
-                                            value="{{ isset($request) ? $request->min_price : '' }}">
-                                    </div>
-                                    <div class="col-1 text-center">-</div>
-                                    <div class="col">
-                                        <input type="number" name="max_price" class="form-control" placeholder="Max Ft"
-                                            value="{{ isset($request) ? $request->max_price : '' }}">
+                                            <button type="submit" class="btn btn-primary">Szűrés</button>
+                                            <a href="{{ route('products.byCategory', ['category' => $selectedCategory->kat_id]) }}"
+                                                class="btn btn-secondary">Alaphelyzet</a>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
-
-                            <button type="submit" class="btn btn-primary">Szűrés</button>
-                            <a href="{{ route('products.byCategory', ['category' => $selectedCategory->kat_id]) }}"
-                                class="btn btn-secondary">Alaphelyzet</a>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -255,5 +265,16 @@
         document.getElementById("filter_form").submit();
         }
 
+        var classList = document.getElementById('collapseOne').classList;
+
+        var minWidth576 = window.matchMedia("(min-width: 576px)");
+
+        function match() {
+            minWidth576.matches ? classList.add('show') : classList.remove('show');
+        }
+
+        minWidth576.addListener(match);
+
+        match();
     </script>
 @endsection

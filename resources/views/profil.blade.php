@@ -64,36 +64,41 @@
                             </div>
                         </div>
                     <div>
-                        <table class="table table-bordered table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Rendelés azonosító</th>
-                                    <th>Termékek</th>
-                                    <th>Mennyiség</th>
-                                    <th>Ár</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                        <h2 class="text-center py-3">Korábbi rendelések</h2>
+                        @if (count($azon) == 0)
+                            <p class="text-center">Nincsenek korábbi rendelések!</p>
+                        @else
+                            <table class="table table-bordered table-striped">
+                                <thead>
                                     <tr>
-                                        <td>{{ $azon[0]->rendt_id }}</td>
-                                        <td>
-                                            @foreach ($result as $termekek)
-                                                {{ $termekek->cikkszam. ' - ' .$termekek->termek_nev}}<br>
-                                            @endforeach
-                                        </td>
-                                        <td>
-                                            @foreach ($result as $mennyiseg)
-                                                {{$mennyiseg->menny}}<br>
-                                            @endforeach
-                                        </td>
-                                        <td>
-                                            @foreach ($result as $arak)
-                                                {{ number_format($arak->netto*$arak->afa,0,',',' ') }}<br>
-                                            @endforeach
-                                        </td>
+                                        <th>Rendelés azonosító</th>
+                                        <th>Termékek</th>
+                                        <th>Mennyiség</th>
+                                        <th>Ár</th>
                                     </tr>
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                        <tr>
+                                            <td>{{ $azon[0]->rendt_id }}</td>
+                                            <td>
+                                                @foreach ($result as $termekek)
+                                                    {{ $termekek->cikkszam. ' - ' .$termekek->termek_nev}}<br>
+                                                @endforeach
+                                            </td>
+                                            <td>
+                                                @foreach ($result as $mennyiseg)
+                                                    {{$mennyiseg->menny}}<br>
+                                                @endforeach
+                                            </td>
+                                            <td>
+                                                @foreach ($result as $arak)
+                                                    {{ number_format($arak->netto*$arak->afa,0,',',' ') }}<br>
+                                                @endforeach
+                                            </td>
+                                        </tr>
+                                </tbody>
+                            </table>
+                        @endif
                     </div>
                 </div>
             </div>

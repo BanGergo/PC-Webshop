@@ -1,5 +1,6 @@
 @extends('layout')
 @section('content')
+{{-- @dd(Auth::user()) --}}
     <div class="container">
         <h2>Adja meg az adatait</h2>
         @if (!Auth::check())
@@ -63,28 +64,28 @@
             @csrf
             <div class="py-2">
                 <label for="user_telefon" class="form-label">Telefonszám:</label>
-                <input type="tel" name="user_telefon" id="user_telefon" value="{{old('user_telefon')}}" class="form-control">
+                <input type="tel" name="user_telefon" id="user_telefon" value="{{old('user_telefon', Auth::user()->telefon)}}" class="form-control">
                 @error('user_telefon')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
             </div>
             <div class="py-2">
                 <label for="user_irszam" class="form-label">Irányítószám:</label>
-                <input type="text" name="user_irszam" id="user_irszam" value="{{old('user_irszam')}}" class="form-control">
+                <input type="text" name="user_irszam" id="user_irszam" value="{{old('user_irszam', Auth::user()->irszam)}}" class="form-control">
                 @error('user_irszam')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
             </div>
             <div class="py-2">
                 <label for="user_varos" class="form-label">Város:</label>
-                <input type="text" name="user_varos" id="user_varos" value="{{old('user_varos')}}" class="form-control">
+                <input type="text" name="user_varos" id="user_varos" value="{{old('user_varos', Auth::user()->varos)}}" class="form-control">
                 @error('user_varos')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
             </div>
             <div class="py-2">
                 <label for="user_uha" class="form-label">Utca, házszám:</label>
-                <input type="text" name="user_uha" id="user_uha" value="{{old('user_uha')}}" class="form-control">
+                <input type="text" name="user_uha" id="user_uha" value="{{old('user_uha', Auth::user()->uha)}}" class="form-control">
                 @error('user_uha')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror

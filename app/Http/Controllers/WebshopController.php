@@ -310,7 +310,8 @@ class WebshopController extends Controller
 
     public function Delivery()
     {
-        return view('delivery');
+        return view('delivery', [
+        ]);
     }
 
     public function DeliveryData(Request $req)
