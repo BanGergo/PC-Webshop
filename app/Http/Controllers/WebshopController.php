@@ -135,6 +135,14 @@ class WebshopController extends Controller
                                     ->pluck('max_value', 'tul_nev_id')
                                     ->toArray();
 
+        $min_ar = termek::selectRaw('MIN(termek.netto * termek.afa) AS min_ar')
+                        ->where('termek.kat_id', $category)
+                        ->get();
+
+        $max_ar = termek::selectRaw('MAX(termek.netto * termek.afa) AS max_ar')
+                        ->where('termek.kat_id', $category)
+                        ->get();
+
         $tulajdonsagok_ertek = termek_tul::select('termek_tul.tul_ertek', 'kat_tul.kat_tul_id')
                         ->distinct()
                         ->join('kat_tul', 'kat_tul.kat_tul_id', 'termek_tul.kat_tul_id')
@@ -177,18 +185,18 @@ class WebshopController extends Controller
                             ->where("termek_tul_$key.tul_ertek", '=', $value);
                 }
 
-                else if (str_starts_with($key, 'min_')) {
-                    $baseKey = preg_replace('/^(min_)/', '', $key);
-                    $max = request()->get("max_$baseKey");
-                    $query->join("kat_tul AS kat_tul_$key", 'kategoria.kat_id', '=', "kat_tul_$key.kat_id")
-                            ->join("tulajdonsag AS tul_$key", "tul_$key.tul_nev_id", '=', "kat_tul_$key.tul_nev_id")
-                            ->join("termek_tul AS termek_tul_$key", function($join) use ($key) {
-                                $join->on("termek_tul_$key.kat_tul_id", '=', "kat_tul_$key.kat_tul_id")
-                                        ->on("termek_tul_$key.cikkszam", '=', 'termek.cikkszam');
-                            })
-                            ->where('termek.kat_id', $category)
-                            ->whereBetween("termek_tul_$key.tul_ertek", array($value, $max));
-                }
+                // else if (str_starts_with($key, 'min_')) {
+                //     $baseKey = preg_replace('/^(min_)/', '', $key);
+                //     $max = request()->get("max_$baseKey");
+                //     $query->join("kat_tul AS kat_tul_$key", 'kategoria.kat_id', '=', "kat_tul_$key.kat_id")
+                //             ->join("tulajdonsag AS tul_$key", "tul_$key.tul_nev_id", '=', "kat_tul_$key.tul_nev_id")
+                //             ->join("termek_tul AS termek_tul_$key", function($join) use ($key) {
+                //                 $join->on("termek_tul_$key.kat_tul_id", '=', "kat_tul_$key.kat_tul_id")
+                //                         ->on("termek_tul_$key.cikkszam", '=', 'termek.cikkszam');
+                //             })
+                //             ->where("kat_tuL_$key.kat_id", $category)
+                //             ->whereBetween("termek_tul_$key.tul_ertek", array($value, $max));
+                // }
             }
         }
 
@@ -196,7 +204,7 @@ class WebshopController extends Controller
 
     $products = $query->get();
 
-        return view('products.filtered', compact('gyartok', 'products', 'selectedCategory', 'request', 'tulajdonsagok', 'tulajdonsagok_ertek', 'tul_ertek_min', 'tul_ertek_max'));
+        return view('products.filtered', compact('gyartok', 'products', 'selectedCategory', 'request', 'tulajdonsagok', 'tulajdonsagok_ertek', 'tul_ertek_min', 'tul_ertek_max', 'min_ar', 'max_ar'));
     }
 
     public function adatlap($cikkszam)
@@ -254,8 +262,14 @@ class WebshopController extends Controller
 
     public function profil(){
         return view('profil',[
-            'nevek' => termek::select('*')
-            ->get()
+            'result'    => rendeles_torzs::select('rendeles_torzs.rendt_id', 'rendeles_tetel.cikkszam', 'rendeles_tetel.menny', 'rendeles_tetel.netto', 'rendeles_tetel.afa', 'termek.termek_nev')
+                                        ->join('rendeles_tetel', 'rendeles_torzs.rendt_id', 'rendeles_tetel.rendt_id')
+                                        ->join('termek', 'rendeles_tetel.cikkszam', 'termek.cikkszam')
+                                        ->where('rendeles_torzs.user_id', Auth::user()->user_id)
+                                        ->get(),
+            'azon'      => rendeles_torzs::select('rendt_id')
+                                        ->where('user_id', Auth::user()->user_id)
+                                        ->get()
         ]);
     }
 

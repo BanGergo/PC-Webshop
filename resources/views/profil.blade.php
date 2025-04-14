@@ -1,3 +1,8 @@
+<style>
+    td:last-child{
+        width: 100px;
+    }
+</style>
 @extends('layout')
 @section('content')
     <div class="mx-auto my-2 col-md-8">
@@ -60,7 +65,34 @@
                         </div>
                     <div>
                         <table class="table table-bordered table-striped">
-                            
+                            <thead>
+                                <tr>
+                                    <th>Rendelés azonosító</th>
+                                    <th>Termékek</th>
+                                    <th>Mennyiség</th>
+                                    <th>Ár</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                    <tr>
+                                        <td>{{ $azon[0]->rendt_id }}</td>
+                                        <td>
+                                            @foreach ($result as $termekek)
+                                                {{ $termekek->cikkszam. ' - ' .$termekek->termek_nev}}<br>
+                                            @endforeach
+                                        </td>
+                                        <td>
+                                            @foreach ($result as $mennyiseg)
+                                                {{$mennyiseg->menny}}<br>
+                                            @endforeach
+                                        </td>
+                                        <td>
+                                            @foreach ($result as $arak)
+                                                {{ number_format($arak->netto*$arak->afa,0,',',' ') }}<br>
+                                            @endforeach
+                                        </td>
+                                    </tr>
+                            </tbody>
                         </table>
                     </div>
                 </div>
