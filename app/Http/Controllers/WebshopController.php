@@ -427,7 +427,8 @@ class WebshopController extends Controller
             }
         }
 
-        session()->flush('cart');
+        session()->forget('cart');
+        Session()->Save();
         ## $order adatbázisba írása
         if($total == 0){
             return redirect('/');
