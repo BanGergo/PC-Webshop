@@ -47,6 +47,7 @@
         <div class="col-md-6">
             <h1 class="mb-4">{{ $termek->termek_nev }}</h1>
             <div class="mb-3">
+                <p>Cikkszám: {{ $termek->cikkszam }}</p>
                 <span class="h3 text-danger fw-bold">{{ number_format($termek->netto * $termek->afa, 0, ',', ' ') }} Ft</span>
                 @if($termek->kedv > 0)
                     <span class="badge bg-danger ms-2">-{{ $termek->kedv }}%</span>
@@ -82,23 +83,6 @@
 
             <!-- Reviews Section -->
             <div class="mt-5">
-                <h4>Vélemények ({{ count($reviews) }})</h4>
-                @foreach($reviews as $review)
-                    <div class="card mb-3">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    @for($i = 1; $i <= 5; $i++)
-                                        <i class="fas fa-star {{ $i <= $review->rating ? 'text-warning' : 'text-secondary' }}"></i>
-                                    @endfor
-                                </div>
-                                <small class="text-muted">{{ $review->created_at->format('Y.m.d') }}</small>
-                            </div>
-                            <p class="mt-2 mb-0">{{ $review->comment }}</p>
-                        </div>
-                    </div>
-                @endforeach
-
                 @auth
                     <form action="{{ route('products.addReview', $termek->cikkszam) }}" method="POST">
                         @csrf
@@ -123,6 +107,23 @@
                         A véleményezéshez kérjük, <a class="btn btn-primary" data-bs-target="#loginModal" data-bs-toggle="modal" id="mobilProfil">jelentkezzen be</a>!
                     </div>
                 @endauth
+
+                <h4>Vélemények ({{ count($reviews) }})</h4>
+                @foreach($reviews as $review)
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    @for($i = 1; $i <= 5; $i++)
+                                        <i class="fas fa-star {{ $i <= $review->rating ? 'text-warning' : 'text-secondary' }}"></i>
+                                    @endfor
+                                </div>
+                                <small class="text-muted">{{ $review->created_at->format('Y.m.d') }}</small>
+                            </div>
+                            <p class="mt-2 mb-0">{{ $review->comment }}</p>
+                        </div>
+                    </div>
+                @endforeach
             </div>
         </div>
     </div>

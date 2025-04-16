@@ -20,6 +20,7 @@
                                 </div>
                             </div>
                             <div class="col-md">
+                                <input type="text" name="cikkszam" value="{{$row['cikkszam']}}" hidden>
                                 <div class="d-flex justify-content-end">
                                     <button class="btn btn-dark me-3 px-3" type="submit" name="delete" value="{{$row['cikkszam']}}">
                                         <i class="fa-solid fa-trash"></i>
@@ -27,7 +28,7 @@
                                     <button class="btn btn-dark" type="submit" name="minus" value="{{$row['cikkszam']}}">
                                         <i class="fa-solid fa-minus"></i>
                                     </button>
-                                    <input type="text" name="db" value="{{$row['db']}}" class="form-control text-center" style="width: 4rem;" disabled>
+                                    <input type="text" name="db" value="{{$row['db']}}" class="form-control text-center" min="1" style="width: 4rem;" disabled>
                                     <button class="btn btn-dark" type="submit" name="plus" value="{{$row['cikkszam']}}">
                                         <i class="fa-solid fa-plus"></i>
                                     </button>

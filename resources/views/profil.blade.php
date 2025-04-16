@@ -65,7 +65,7 @@
                         </div>
                     <div>
                         <h2 class="text-center py-3">Korábbi rendelések</h2>
-                        @if (count($azon) == 0)
+                        @if (count($result) == 0)
                             <p class="text-center">Nincsenek korábbi rendelések!</p>
                         @else
                             <table class="table table-bordered table-striped">
@@ -78,24 +78,32 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @for ($i = 0; $i < count($azon); $i++)
                                         <tr>
-                                            <td>{{ $azon[0]->rendt_id }}</td>
+                                            <td>{{ $azon[$i]->rendt_id }}</td>
                                             <td>
                                                 @foreach ($result as $termekek)
-                                                    {{ $termekek->cikkszam. ' - ' .$termekek->termek_nev}}<br>
+                                                    @if ($termekek->rendt_id == $azon[$i]->rendt_id)
+                                                        {{ $termekek->cikkszam. ' - ' .$termekek->termek_nev}}<br>
+                                                    @endif
                                                 @endforeach
                                             </td>
                                             <td>
                                                 @foreach ($result as $mennyiseg)
-                                                    {{$mennyiseg->menny}}<br>
+                                                    @if ($mennyiseg->rendt_id == $azon[$i]->rendt_id)
+                                                        {{$mennyiseg->menny}}<br>
+                                                    @endif
                                                 @endforeach
                                             </td>
                                             <td>
                                                 @foreach ($result as $arak)
-                                                    {{ number_format($arak->netto*$arak->afa,0,',',' ') }}<br>
+                                                    @if ($arak->rendt_id == $azon[$i]->rendt_id)
+                                                        {{ number_format($arak->netto*$arak->afa,0,',',' ') }}<br>
+                                                    @endif
                                                 @endforeach
                                             </td>
                                         </tr>
+                                    @endfor
                                 </tbody>
                             </table>
                         @endif

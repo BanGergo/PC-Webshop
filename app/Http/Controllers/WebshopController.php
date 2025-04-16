@@ -246,7 +246,7 @@ class WebshopController extends Controller
     public function showReviews($cikkszam)
     {
         $termek = termek::where('cikkszam', $cikkszam)->first();
-        $reviews = review::where('cikkszam', $termek->id)->get();
+        $reviews = review::where('cikkszam', $cikkszam)->get();
 
         return view('products.showReviews', [
             'termek' => $termek,
@@ -268,8 +268,8 @@ class WebshopController extends Controller
                                         ->where('rendeles_torzs.user_id', Auth::user()->user_id)
                                         ->get(),
             'azon'      => rendeles_torzs::select('rendt_id')
-                                        ->where('user_id', Auth::user()->user_id)
-                                        ->get()
+                                            ->where('user_id', Auth::user()->user_id)
+                                            ->get()
         ]);
     }
 
@@ -281,13 +281,13 @@ class WebshopController extends Controller
             }
         }
         return view('cart', [
-            'total'     => $total
+            'total'     => $total,
+            'db'        => termek::select('keszlet')->get()
         ]);
     }
 
     public function CartData(Request $req){
         $cart = session()->get('cart');
-
         if($req->has('minus')){
             if($cart[$req->minus]['db']>1){
                 $cart[$req->minus]['db'] = $cart[$req->minus]['db']-1;
@@ -296,7 +296,12 @@ class WebshopController extends Controller
             }
         }
 
-        if($req->has('plus')){
+        $keszlet = termek::select('keszlet')
+                        ->where('cikkszam', $cart[$req->cikkszam]['cikkszam'])
+                        ->first();
+        // dd($keszlet);
+
+        if($req->has('plus') && $cart[$req->plus]['db'] < $keszlet->keszlet){
             $cart[$req->plus]['db'] = $cart[$req->plus]['db']+1;
         }
 
@@ -399,11 +404,14 @@ class WebshopController extends Controller
 
             foreach ($order as $row)
             {
+                $keszlet = termek::find($row['cikkszam']);
+                $keszlet->keszlet = $keszlet->keszlet - $row['db'];
                 $tetelData = new rendeles_tetel;
                 $tetelData->rendt_id = rendeles_torzs::max('rendt_id');
                 $tetelData->cikkszam = $row['cikkszam'];
                 $tetelData->menny = $row['db'];
                 $tetelData->netto = $row['netto'];
+                $keszlet->Save();
                 $tetelData->Save();
             }
         }
@@ -418,11 +426,14 @@ class WebshopController extends Controller
 
             foreach ($order as $row)
             {
+                $keszlet = termek::find($row['cikkszam']);
+                $keszlet->keszlet = $keszlet->keszlet - $row['db'];
                 $tetelData = new rendeles_tetel;
                 $tetelData->rendt_id = rendeles_torzs::max('rendt_id');
                 $tetelData->cikkszam = $row['cikkszam'];
                 $tetelData->menny = $row['db'];
                 $tetelData->netto = $row['netto'];
+                $keszlet->Save();
                 $tetelData->Save();
             }
         }
@@ -455,7 +466,7 @@ class WebshopController extends Controller
                 'netto'        => $termek->netto,
                 'afa'        => $termek->afa,
                 'url'       => $image->url,
-                'db'        => 1
+                'db'        => $req->quantity
             ];
         }
 
