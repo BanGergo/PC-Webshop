@@ -112,15 +112,16 @@
                 @foreach($reviews as $review)
                     <div class="card mb-3">
                         <div class="card-body">
+                            <h5>{{ $review->username }}</h5>
                             <div class="d-flex justify-content-between">
                                 <div>
                                     @for($i = 1; $i <= 5; $i++)
-                                        <i class="fas fa-star {{ $i <= $review->rating ? 'text-warning' : 'text-secondary' }}"></i>
+                                        <i class="fas fa-star {{ $i <= $review->ertekeles ? 'text-warning' : 'text-secondary' }}"></i>
                                     @endfor
                                 </div>
                                 <small class="text-muted">{{ $review->created_at->format('Y.m.d') }}</small>
                             </div>
-                            <p class="mt-2 mb-0">{{ $review->comment }}</p>
+                            <p class="mt-2 mb-0">{{ $review->review }}</p>
                         </div>
                     </div>
                 @endforeach

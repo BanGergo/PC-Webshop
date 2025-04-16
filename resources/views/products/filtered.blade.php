@@ -130,7 +130,7 @@
                                                                 @endif
                                                             @endforeach
                                                         </select>
-                                                    @else
+                                                    {{-- @else
                                                         <div class="range_container">
                                                             <div class="sliders_control">
                                                                 <input id="fromSlider_{{ $tulajdonsag->tul_nev_id }}" type="range"
@@ -164,13 +164,13 @@
                                                                         max="{{ $tul_ertek_max[$tulajdonsag->tul_nev_id] }}" />
                                                                 </div>
                                                             </div>
-                                                        </div>
+                                                        </div> --}}
                                                     @endif
                                                 @endforeach
                                             </div>
 
                                             <!-- Price range filter -->
-                                            <div class="mb-3">
+                                            {{-- <div class="mb-3">
                                                 <label class="form-label">Ár tartomány</label>
                                                 <div class="row">
                                                     <div class="col">
@@ -183,7 +183,41 @@
                                                             value="{{ isset($request) ? $request->max_price : '' }}">
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div> --}}
+                                                <div class="range_container">
+                                                    <div class="sliders_control mt-3">
+                                                        <input id="fromSlider_" type="range"
+                                                            value="{{ old('min_price',$min_ar->min_ar) }}"
+                                                            min="{{ $min_ar->min_ar }}"
+                                                            max="{{ $max_ar->max_ar }}"
+                                                            name="min_price"
+                                                            onchange="handleChange(this)"/>
+                                                        <input id="toSlider_" type="range"
+                                                            value="{{ old('max_price',$max_ar->max_ar) }}"
+                                                            min="{{ $min_ar->min_ar }}"
+                                                            max="{{ $max_ar->max_ar }}"
+                                                            name="max_price"
+                                                            onchange="handleChange(this)"/>
+                                                    </div>
+                                                    <div class="form_control">
+                                                        <div class="form_control_container">
+                                                            <div class="form_control_container__time">Min</div>
+                                                            <input class="form_control_container__time__input" type="number"
+                                                                id="fromInput_"
+                                                                value="{{ old('min_price',$min_ar->min_ar) }}"
+                                                                min="{{ $min_ar->min_ar }}"
+                                                                max="{{ $max_ar->max_ar }}" />
+                                                        </div>
+                                                        <div class="form_control_container">
+                                                            <div class="form_control_container__time">Max</div>
+                                                            <input class="form_control_container__time__input" type="number"
+                                                                id="toInput_"
+                                                                value="{{ old('max_price',$max_ar->max_ar) }}"
+                                                                min="{{ $min_ar->min_ar }}"
+                                                                max="{{ $max_ar->max_ar }}" />
+                                                        </div>
+                                                    </div>
+                                                </div>
 
                                             <button type="submit" class="btn btn-primary">Szűrés</button>
                                             <a href="{{ route('products.byCategory', ['category' => $selectedCategory->kat_id]) }}"
@@ -228,11 +262,11 @@
     <script text="javascript">
         function handleChange(e) {
             const newValue = Number(e.value);
-            const id = e.id.split("_")[1];
+            const id = e.id.split("_");
             if (e.id.includes("fromSlider")) {
-                const fromInput = document.getElementById(`fromInput_${id}`);
+                const fromInput = document.getElementById(`fromInput_`);
                 fromInput.value = newValue;
-                const to = document.getElementById(`toSlider_${id}`)
+                const to = document.getElementById(`toSlider_`)
                 const toValue = Number(to.value);
                 if (newValue > toValue) {
                     console.log(e.id, newValue, toValue);
@@ -242,14 +276,14 @@
                     else {
                         to.value = newValue + 1;
                     }
-                document.getElementById(`toInput_${id}`).value = to.value;
+                document.getElementById(`toInput_`).value = to.value;
                 }
             }
 
             else if (e.id.includes("toSlider")) {
-                const toInput = document.getElementById(`toInput_${id}`);
+                const toInput = document.getElementById(`toInput_`);
                 toInput.value = newValue;
-                const from = document.getElementById(`fromSlider_${id}`);
+                const from = document.getElementById(`fromSlider_`);
                 const fromValue = Number(from.value);
                 if (newValue < fromValue) {
                     console.log(e.id, newValue, fromValue);
@@ -259,7 +293,7 @@
                     else {
                         from.value = newValue - 1;
                     }
-                document.getElementById(`fromInput_${id}`).value = from.value;
+                document.getElementById(`fromInput_`).value = from.value;
                 }
             }
         document.getElementById("filter_form").submit();

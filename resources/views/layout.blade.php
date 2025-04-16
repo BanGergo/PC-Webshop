@@ -217,8 +217,8 @@
                         </div>
                         <div class="col-md fs-6">
                             <h4 class="cim4">Információk</h4>
-                            <a href="#">ÁSZF</a><br>
-                            <a href="#">Adatvédelem</a>
+                            <a href="{{ asset('assets/pdf/webshop-ASZF.pdf') }}" target="_blank">ÁSZF</a><br>
+                            <a href="{{ asset('assets/pdf/webshop-ADATVEDELEM.pdf') }}" target="_blank">Adatvédelem</a>
                         </div>
                         <div class="col-md">
                             <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d617.5940369273575!2d19.076594482156562!3d47.52956361454255!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4741db939c5746e7%3A0xf93af4f99f4b38a8!2sBMSZC%20Vereb%C3%A9ly%20L%C3%A1szl%C3%B3%20Technikum!5e0!3m2!1shu!2shu!4v1738143282628!5m2!1shu!2shu" width="300" height="225" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>

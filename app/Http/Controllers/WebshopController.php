@@ -74,6 +74,14 @@ class WebshopController extends Controller
                                     ->pluck('max_value', 'tul_nev_id')
                                     ->toArray();
 
+        $min_ar = termek::selectRaw('ROUND(MIN(termek.netto * termek.afa), 0) AS min_ar, cikkszam')
+                        ->where('termek.kat_id', $category)
+                        ->first();
+
+        $max_ar = termek::selectRaw('ROUND(MAX(termek.netto * termek.afa), 0) AS max_ar, cikkszam')
+                        ->where('termek.kat_id', $category)
+                        ->first();
+
         $tulajdonsagok_ertek = termek_tul::select('termek_tul.tul_ertek', 'kat_tul.kat_tul_id')
                                         ->distinct()
                                         ->join('kat_tul', 'kat_tul.kat_tul_id', 'termek_tul.kat_tul_id')
@@ -91,7 +99,7 @@ class WebshopController extends Controller
         $products = $query->where('termek.kat_id', $category)
                         ->get();
 
-        return view('products.filtered', compact('gyartok', 'products', 'selectedCategory', 'request', 'tulajdonsagok', 'tulajdonsagok_ertek', 'tul_ertek_min', 'tul_ertek_max'));
+        return view('products.filtered', compact('gyartok', 'products', 'selectedCategory', 'request', 'tulajdonsagok', 'tulajdonsagok_ertek', 'tul_ertek_min', 'tul_ertek_max', 'min_ar', 'max_ar'));
     }
 
     public function filter(Request $request)
@@ -135,13 +143,13 @@ class WebshopController extends Controller
                                     ->pluck('max_value', 'tul_nev_id')
                                     ->toArray();
 
-        $min_ar = termek::selectRaw('MIN(termek.netto * termek.afa) AS min_ar')
+        $min_ar = termek::selectRaw('ROUND(MIN(termek.netto * termek.afa), 0) AS min_ar, cikkszam')
                         ->where('termek.kat_id', $category)
-                        ->get();
+                        ->first();
 
-        $max_ar = termek::selectRaw('MAX(termek.netto * termek.afa) AS max_ar')
+        $max_ar = termek::selectRaw('ROUND(MAX(termek.netto * termek.afa), 0) AS max_ar, cikkszam')
                         ->where('termek.kat_id', $category)
-                        ->get();
+                        ->first();
 
         $tulajdonsagok_ertek = termek_tul::select('termek_tul.tul_ertek', 'kat_tul.kat_tul_id')
                         ->distinct()
@@ -162,11 +170,11 @@ class WebshopController extends Controller
         }
 
         if (isset($request->min_price) && !empty($request->min_price)) {
-            $query->where('termek.netto', '>=', $request->min_price);
+            $query->whereRaw("ROUND(termek.netto * termek.afa) >= $request->min_price");
         }
 
         if (isset($request->max_price) && !empty($request->max_price)) {
-            $query->where('termek.netto', '<=', $request->max_price);
+            $query->whereRaw("ROUND(termek.netto * termek.afa) <= $request->max_price");
         }
 
         if (!empty($request->query)) {
@@ -211,7 +219,7 @@ class WebshopController extends Controller
     {
         $termek = termek::where('cikkszam', $cikkszam)->first();
         $images = image::where('cikkszam', $cikkszam)->get();
-        $reviews = review::where('cikkszam', $cikkszam)->get();
+        $reviews = review::where('cikkszam', $cikkszam)->join('user', 'user.user_id', 'review.user_id')->get();
         $tulajdonsagok = tulajdonsag::where('termek_tul.cikkszam', $cikkszam)
                             ->join('kat_tul', 'kat_tul.tul_nev_id', 'tulajdonsag.tul_nev_id')
                             ->join('termek_tul', 'kat_tul.kat_tul_id', 'termek_tul.kat_tul_id')
@@ -235,9 +243,9 @@ class WebshopController extends Controller
 
         $review = new review();
         $review->cikkszam = $termek->cikkszam;
-        $review->user_id = Auth::id();
-        $review->rating = $req->rating;
-        $review->comment = $req->comment;
+        $review->user_id = Auth::user()->user_id;
+        $review->ertekeles = $req->rating;
+        $review->review = $req->comment;
         $review->save();
 
         return redirect()->back()->with('success', 'Review added successfully!');
@@ -246,7 +254,7 @@ class WebshopController extends Controller
     public function showReviews($cikkszam)
     {
         $termek = termek::where('cikkszam', $cikkszam)->first();
-        $reviews = review::where('cikkszam', $cikkszam)->get();
+        $reviews = review::where('cikkszam', $cikkszam)->join('user', 'user.user_id', 'review.user_id')->get();
 
         return view('products.showReviews', [
             'termek' => $termek,
